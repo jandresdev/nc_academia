@@ -18,6 +18,16 @@ Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>
 
 `assets/media/` es el origen de las imágenes y el generador la copia a `dist/`. No la borres: `npm run build` limpia `dist/` en cada compilación.
 
+## Embudo de ventas y precios
+
+Cada landing es una página de venta: precio en COP y USD en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.
+
+- **La tienda no tiene enlaces de pago por curso.** En `negocioscreativos.net/ncacademia/cursos`, "Inscribirme ahora" guarda el curso en un carrito del navegador (`localStorage`, clave `shopping-cart`) y abre `/cart`, donde se elige USD o COP y se finaliza la compra.
+- **Cómo lo resuelven las landings:** el botón de compra lleva el id de producto, el precio y la imagen del curso (`data-product`). Si la landing se sirve desde `negocioscreativos.net` (por ejemplo `/ncacademia/cursos/<curso>/`), el clic agrega ese curso al mismo carrito y abre `/cart` (validado contra la tienda real). Desde otro dominio (Vercel, pruebas) no se puede escribir en el carrito de otro sitio, y el botón abre la página de cursos de la tienda con parámetros UTM.
+- **Mejor opción a futuro:** pedir al equipo de la tienda un enlace directo por curso (por ejemplo `/cart?add=<id>`); basta con cambiar `buyHref` en `generate.mjs`.
+- **Datos comerciales:** `assets/commerce.json` (precios, horas, cupo, descripción, id de producto) y las imágenes `assets/media/card-*.webp` se generan con `python scripts/fetch-products.py`, que lee la página pública de cursos. Vuelve a ejecutarlo cuando cambien precios o imágenes y recompila con `npm run build`. Las horas y los precios de la tienda mandan sobre los del PDF.
+- **Analítica:** el clic en compra emite `buy_click` (curso, ubicación, precio, moneda) y el de asesor `whatsapp_click`.
+
 ## Configuración y CTA
 
 - El número oficial de WhatsApp es **+57 311 209 3653** (`573112093653`) y está en `assets/config.js` y en la constante `WHATSAPP` de `generate.mjs` (mantenerlos iguales; los HTML llevan la configuración incrustada). Si cambia, usar solo dígitos con prefijo internacional. No completar con un número tomado del PDF o de la web porque las fuentes disponibles discrepan.

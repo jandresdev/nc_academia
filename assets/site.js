@@ -72,9 +72,32 @@
     window.addEventListener('load', () => setTimeout(() => { guard = setInterval(probe, 1500); }, 3000));
   }
 
-  // Botón flotante de WhatsApp: enlace directo (funciona sin JS); aquí solo se mide el clic.
-  document.querySelectorAll('.wa-float').forEach(link => link.addEventListener('click', () => {
-    emit('whatsapp_click', { course_id: link.dataset.course || 'unknown', placement: 'float', page_path: location.pathname });
+  // Botón flotante de WhatsApp y "Hablar con un asesor": enlaces directos (funcionan sin JS); aquí solo se mide el clic.
+  document.querySelectorAll('.wa-float, .wa-advisor').forEach(link => link.addEventListener('click', () => {
+    emit('whatsapp_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'float', page_path: location.pathname });
+  }));
+
+  // Compra: la tienda de Negocios Creativos no tiene enlaces de pago por curso; "Inscribirme ahora" guarda el curso en el carrito del
+  // navegador (localStorage "shopping-cart", formato de la tienda) y abre /cart, donde se elige la moneda y se finaliza. Si la landing
+  // se sirve desde negocioscreativos.net, se hace lo mismo desde aquí; desde otro dominio no se puede escribir en ese carrito, así que
+  // el enlace abre la página de cursos de la tienda con parámetros de seguimiento.
+  document.querySelectorAll('.buy-cta').forEach(link => link.addEventListener('click', event => {
+    let product = {};
+    try { product = JSON.parse(link.dataset.product || '{}'); } catch (e) { product = {}; }
+    emit('buy_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'unknown', price: product.price, currency: 'COP', page_path: location.pathname });
+    const sameStore = /(^|\.)negocioscreativos\.net$/.test(location.hostname);
+    if (!sameStore || !product.id) return; // navegación normal al enlace
+    event.preventDefault();
+    try {
+      const saved = JSON.parse(localStorage.getItem('shopping-cart') || 'null') || { state: { cart: [] }, version: 0 };
+      saved.state = saved.state || {};
+      saved.state.cart = Array.isArray(saved.state.cart) ? saved.state.cart : [];
+      if (!saved.state.cart.some(item => item.id === product.id)) {
+        saved.state.cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image, description: product.description, type: 'course' });
+      }
+      localStorage.setItem('shopping-cart', JSON.stringify(saved));
+    } catch (e) { /* si el almacenamiento falla, el carrito se abre igual y la persona elige el curso allí */ }
+    window.location.href = '/cart';
   }));
 
   // Formulario de captación: valida, arma el mensaje y abre WhatsApp o correo para que la persona lo revise y lo envíe.

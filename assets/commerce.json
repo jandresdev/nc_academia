@@ -1,0 +1,166 @@
+{
+ "source": "https://www.negocioscreativos.net/ncacademia/cursos",
+ "usdRate": 3100,
+ "products": {
+  "ia-facil-para-todos": {
+   "productId": "e51d4188-86f8-4044-963f-28e3624c74a4",
+   "title": "IA fácil para todos - Emprendedor",
+   "subtitle": "IA para tu día a día",
+   "description": "Curso certificado diseñado para emprendedores que quieren integrar la IA en su día a día",
+   "priceCOP": 1300000,
+   "priceUSD": 419.35,
+   "level": "Principiante",
+   "hoursLabel": "12 horas",
+   "studentsLabel": "Hasta 4 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2Fe0eba4a2-9093-4cf9-b7e3-bf2a7ad663d7?alt=media&token=46d8ada5-b181-4156-83ae-c5094813f1c3",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "diseno-creativo-con-ia": {
+   "productId": "7b44adb2-adfb-4437-bce7-2d544ff17701",
+   "title": "Diseño Creativo con IA - Pro1",
+   "subtitle": "Diseña como un PRO",
+   "description": "Curso certificado para dominar el diseño creativo con herramientas de IA y crear contenido profesional",
+   "priceCOP": 1700000,
+   "priceUSD": 548.39,
+   "level": "Intermedio",
+   "hoursLabel": "Hasta 12 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F6bc15d9a-0b5c-485e-8b81-ecf8c08e8ef9?alt=media&token=92e64661-22b8-4e76-9c6d-c9f376f9820b",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "marketing-total-con-ia": {
+   "productId": "fa255901-e889-4402-8fd6-8086adce403e",
+   "title": "Marketing Total - Pro1",
+   "subtitle": "IA y Marketing Digital",
+   "description": "Curso certificado para dominar el marketing digital con inteligencia artificial",
+   "priceCOP": 1700000,
+   "priceUSD": 548.39,
+   "level": "Intermedio",
+   "hoursLabel": "Hasta 15 horas",
+   "studentsLabel": "Hasta 3 estudiantes con tema relacionado",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F115bd9d3-2962-454e-a5f6-5b91395b78eb?alt=media&token=579386ac-5a4a-4447-b652-5e670fee0f89",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "publicidad-digital-ads": {
+   "productId": "49e74f68-181b-4511-a437-cf029e3d7132",
+   "title": "Publicidad Digital para ADS - Pro2",
+   "subtitle": "Encuentra a tu cliente ideal y GANA",
+   "description": "Curso certificado especializado en publicidad digital y captación de clientes",
+   "priceCOP": 1900000,
+   "priceUSD": 612.9,
+   "level": "Avanzado",
+   "hoursLabel": "Hasta 14 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F4b901b2f-6d25-46ce-873c-1e36965442a6?alt=media&token=9ff26e58-3f8e-40fa-b41a-7ae9b3bc5106",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "ia-para-comerciales": {
+   "productId": "02339085-da2e-4e0d-a521-61d30f89e419",
+   "title": "IA para comerciales - Team",
+   "subtitle": "Unifiquemos tu talento con la IA",
+   "description": "Curso certificado para equipos comerciales que buscan potenciar sus ventas con IA",
+   "priceCOP": 2250000,
+   "priceUSD": 725.81,
+   "level": "Avanzado",
+   "hoursLabel": "Hasta 14 horas",
+   "studentsLabel": "Hasta 2 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F0bed6788-9548-4ba7-a9b0-52878c75e33d?alt=media&token=203284a8-c1ae-4bb8-870e-843f5ed7b9f7",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "ia-para-gerentes": {
+   "productId": "37aeaa65-ac4a-46da-a8a8-b2d8ee65d67c",
+   "title": "IA Para Gerentes - Premium",
+   "subtitle": "Lidera estratégicamente con la IA",
+   "description": "Curso certificado premium para gerentes y líderes empresariales",
+   "priceCOP": 2700000,
+   "priceUSD": 870.97,
+   "level": "Avanzado",
+   "hoursLabel": "Hasta 15 horas",
+   "studentsLabel": "Hasta 2 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F8122a271-165b-40c8-83b4-c9c4a5d0a494?alt=media&token=5832489c-4640-4126-9a41-b8cb6df19730",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "ia-360-para-empresas": {
+   "productId": "b31c9fce-232d-4fad-b578-22b1d6aea97a",
+   "title": "IA 360° para empresas - President",
+   "subtitle": "Programa integral de IA aplicada a la gestión empresarial",
+   "description": "Un programa 360 para llevar la Inteligencia Artificial de la teoría a la operación diaria de tu empresa, convirtiéndola en una herramienta real para ahorrar tiempo, optimizar procesos, tomar mejores decisiones y potenciar el crecimiento del negocio.",
+   "priceCOP": 6200000,
+   "priceUSD": 2000.0,
+   "level": "Avanzado",
+   "hoursLabel": "36 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F05ae50bb-2551-4480-8cfb-58015f7b0dd5?alt=media&token=cfd03534-0b38-4745-b2da-2abd57df0e17",
+   "imageSize": [
+    400,
+    400
+   ]
+  },
+  "automatizacion-y-agentes-ia": {
+   "productId": "bda3ed22-20a0-4539-a1a4-b3826e76adcf",
+   "title": "Automatización y agentes de IA",
+   "subtitle": "Diseña, conecta y supervisa agentes inteligentes para automatizar procesos empresariales.",
+   "description": "Curso práctico y avanzado para diseñar automatizaciones y agentes de Inteligencia Artificial capaces de ejecutar tareas, conectar herramientas, gestionar información y apoyar procesos reales del negocio. Los participantes aprenderán a construir flujos inteligentes, integrar plataformas, configurar acciones y supervisar sistemas de IA aplicados a áreas administrativas, comerciales y operativas.",
+   "priceCOP": 2120000,
+   "priceUSD": 683.87,
+   "level": "Avanzado",
+   "hoursLabel": "14 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F8bf63a7e-d548-41ea-ad15-64a3eb057601?alt=media&token=aaecbcb8-d8a3-4f4e-92f4-fa88207e6964",
+   "imageSize": [
+    400,
+    400
+   ]
+  },
+  "ia-para-administrativos": {
+   "productId": "64bbf898-400a-405c-9aca-de06b4e92011",
+   "title": "IA para Administrativos - Team",
+   "subtitle": "Optimiza la gestión administrativa con IA",
+   "description": "Curso certificado de 14 horas diseñado para optimizar la gestión operativa y administrativa mediante el uso de IA (ChatGPT, Gemini, Copilot). Aprenderás a automatizar flujos de trabajo, redactar comunicaciones profesionales, gestionar información y eliminar tareas repetitivas para maximizar la productividad de tu equipo.",
+   "priceCOP": 2250000,
+   "priceUSD": 725.81,
+   "level": "Intermedio",
+   "hoursLabel": "14 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2Ffab3b52a-526a-456d-b81e-4ac675c51292?alt=media&token=6a1ba1c5-3411-4b31-921d-80c2917dc07b",
+   "imageSize": [
+    900,
+    900
+   ]
+  },
+  "ia-para-finanzas": {
+   "productId": "f044d640-40dc-4809-96a3-6ed6e06275b2",
+   "title": "IA para finanzas - Premium",
+   "subtitle": "Automatiza, analiza y proyecta con Inteligencia Artificial.",
+   "description": "Aprende a transformar la gestión financiera y administrativa de tu empresa con las herramientas de Inteligencia Artificial más avanzadas del mercado (ChatGPT, Gemini, Claude y Copilot). A lo largo de este curso de 16 horas, dominarás la automatización de reportes, la preparación de datos, la proyección presupuestaria y la toma de decisiones estratégicas. Un programa 100% práctico diseñado para reducir tiempos operativos y potenciar la productividad de tu área.",
+   "priceCOP": 2700000,
+   "priceUSD": 870.97,
+   "level": "Intermedio",
+   "hoursLabel": "16 horas",
+   "studentsLabel": "Hasta 3 estudiantes",
+   "imageUrl": "https://firebasestorage.googleapis.com/v0/b/negocios-creativos-app.firebasestorage.app/o/clientes%2Fnegocios-creativos%2Fcourses%2F6c084755-776b-4efa-b690-60bfc074c128?alt=media&token=c4c7d988-fe86-4b48-b2de-845b013cc71f",
+   "imageSize": [
+    900,
+    900
+   ]
+  }
+ }
+}
