@@ -1,0 +1,37 @@
+# Micrositio de landings NC AcademIA
+
+Micrositio estático de diez landings y un catálogo, todavía no publicado. El contenido está pre-renderizado en HTML para que sea legible sin JavaScript. Los HTML finales llevan CSS, JavaScript básico, logotipo y favicon incrustados. Las fotografías y el clip de video están en `dist/assets/media/`: para verlos al abrir los HTML locales hay que conservar esa carpeta junto a las páginas o extraer el ZIP completo.
+
+Cada curso tiene un hero fotográfico de ancho completo, una escena visual en “Para quién”, una franja de práctica con imagen y tarjetas fotográficas en el catálogo y los cursos relacionados. Automatización y Agentes de IA incluye un clip silencioso en la sección de público, con imagen de respaldo y respeto por la preferencia de movimiento reducido. Las escenas se generaron con Higgsfield para este proyecto y se exportaron en WebP para reducir el peso de carga.
+
+## Compilar
+
+Desde esta carpeta, ejecutar `npm run build` con Node.js 18 o superior. La salida queda en `dist/`: un catálogo y una carpeta por URL de curso (`dist/<slug>/index.html`).
+
+## Sistema visual
+
+Sigue el **Manual de marca NC AcademIA 2026** (resumen en `../Identidad visual NC Academia.md`): rojo institucional `#F30206`, negro y blanco; tipografías Amaranth y Muli (en Google Fonts, Mulish); nombre siempre **NC AcademIA**. Tema oscuro único con "liquid glass" (aproximación web con `backdrop-filter`; no es un paquete oficial de Apple), tramas de hexágonos y circuitos, y el personaje GUIA.
+
+Los activos de marca están en `assets/brand/`: `logos/` (las cuatro firmas y el isotipo, con fondo transparente), `guia/` (imágenes del manual) y el favicon. Se generan desde los archivos oficiales con `python scripts/prepare-brand-assets.py "<carpeta MANUAL DE MARCA ACADEMIA_>"` (requiere Pillow). El logo se usa tal cual: sin redibujar, recolorear ni añadir sombras. Los archivos de origen son PNG/JPG de 500 px; para impresión hacen falta los vectoriales.
+
+Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>"]` de `assets/site.css`: motivo de fondo, intensidad del resplandor rojo y luminosidad del cristal, siempre con rojo, negro y neutros. Para ajustar un curso, edita solo ese bloque. Con `prefers-reduced-transparency` o sin soporte de `backdrop-filter`, el cristal pasa a un fondo sólido.
+
+`assets/media/` es el origen de las imágenes y el generador la copia a `dist/`. No la borres: `npm run build` limpia `dist/` en cada compilación.
+
+## Configuración y CTA
+
+- El número oficial de WhatsApp es **+57 311 209 5353** (`573112095353`) y está en `assets/config.js` y en la constante `WHATSAPP` de `generate.mjs` (mantenerlos iguales; los HTML llevan la configuración incrustada). Si cambia, usar solo dígitos con prefijo internacional. No completar con un número tomado del PDF o de la web porque las fuentes disponibles discrepan.
+- Todas las páginas llevan un botón flotante de WhatsApp (abajo a la derecha) con mensaje precargado según el curso; en móvil se sitúa sobre la barra fija de CTA. Los CTA "Pedir información" y el formulario también abren WhatsApp con ese número.
+- Mientras el número esté vacío, los CTA abren un correo a `direccion@negocioscreativos.net` con curso y URL de origen.
+- La URL canónica se define en `generate.mjs`; ahora supone `https://www.negocioscreativos.net/ncacademia/cursos/`. Ajustarla al destino real antes de indexar.
+- El micrositio no tiene checkout, píxel ni propiedad de analítica configurados.
+
+## SEO, IA y medición
+
+Incluye HTML estático, metadatos por página, canonicals, JSON-LD `Course`/`ItemList`, enlaces internos, sitemap y eventos custom para vistas, profundidad de scroll y CTA. La sección `Analisis de referentes y SEO-SXO.md` documenta decisiones SEO, GEO, AEO, AIO y SXO con límites y fuentes.
+
+El sitemap se debe enviar en Search Console o referenciar desde el `robots.txt` raíz del dominio. No se promete ranking, indexación o presencia en respuestas de IA.
+
+## Antes de publicar
+
+Confirmar inversión y unidad de cobro, fechas, modalidad/sesiones, duración de Finanzas, certificado, cupos, herramientas/licencias, docentes, teléfono y ruta de despliegue. Los metadatos `og:image` apuntan a las nuevas imágenes del curso en la URL canónica prevista; revisar esas rutas al desplegar.

@@ -1,0 +1,299 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = path.dirname(fileURLToPath(import.meta.url));
+const out = path.join(root, 'dist');
+const courses = [
+  {
+    slug:'ia-facil-para-todos', number:'01', name:'IA fácil para todos', tier:'Emprendedor', category:'Fundamentos', duration:'12 horas',
+    audience:'Emprendedores y profesionales que quieren comenzar a usar IA sin conocimientos técnicos previos.',
+    title:'Empieza a usar IA con criterio en tu trabajo y negocio.', short:'Una base práctica para organizar, comunicar, investigar y crear con inteligencia artificial, desde cero.',
+    pain:'Ves cómo todos hablan de IA, pero no sabes qué herramienta elegir, qué pedirle o cuándo confiar en lo que responde.',
+    outcome:'Practica con tareas reales de tu día a día: organiza información, mejora comunicaciones, investiga con fuentes y crea recursos visuales. Aprende también qué revisar y qué información cuidar.',
+    modules:[['IA generativa y uso responsable','2 h'],['Prompts, contexto y trabajo diario','4 h'],['Comunicación y productividad','2 h'],['Creación visual y presentaciones','2 h'],['Investigación y aprendizaje continuo','2 h']],
+    tools:'ChatGPT, Gemini, Claude, Microsoft Copilot, Gemini Notebook, Canva AI y Nano Banana; disponibilidad y licencias por confirmar.',
+    artifact:'Ejercicios aplicados a necesidades reales de los participantes.',
+    faqs:[['¿Necesito saber programar?','No. El curso está planteado para comenzar sin conocimientos técnicos previos.'],['¿Qué herramientas se usan?','La ficha menciona ChatGPT, Gemini, Claude, Microsoft Copilot, Gemini Notebook, Canva AI y Nano Banana. La disponibilidad de funciones cambia; consulta qué cuentas necesitas.'],['¿Cuándo empieza y cuánto cuesta?','Fechas, modalidad exacta y condiciones de inversión están por confirmar. Escríbenos y te compartiremos la información vigente.']]
+  },
+  {
+    slug:'marketing-total-con-ia', number:'02', name:'Marketing Total con IA', tier:'Pro 1', category:'Marketing', duration:'15 horas',
+    audience:'Profesionales de marketing, emprendedores y equipos pequeños que gestionan campañas y contenido.',
+    title:'Conecta estrategia, contenido y campañas con IA.', short:'Investiga, planea, produce y optimiza marketing digital con un flujo de trabajo asistido por IA.',
+    pain:'Investigas, publicas, diseñas y pautas en tareas separadas. Mantener un mensaje coherente y saber qué mejorar se vuelve difícil.',
+    outcome:'Trabaja sobre un caso práctico: audiencia, propuesta de valor, calendario editorial, activos web, creatividad, video corto y lectura de resultados.',
+    modules:[['Diagnóstico y objetivos','1 h'],['Fundamentos de publicidad digital*','2 h'],['Redes sociales y estrategia de contenido','4 h'],['IA aplicada al marketing y web','2 h'],['Producción visual a escala','2 h'],['Video corto con CapCut e IA','2 h'],['Publicidad y optimización','2 h']],
+    tools:'ChatGPT, Gemini, Claude, Canva AI, CapCut, Meta Ads, TikTok Ads y Google Ads; alcance por plataforma y licencias por confirmar.',
+    artifact:'Caso práctico de marketing trabajado desde diagnóstico hasta campaña y métricas.',
+    faqs:[['¿Es solo un curso de prompts?','No. El programa recorre investigación, estrategia, contenidos, web, creatividad, publicidad y métricas.'],['¿Las clases técnicas son en vivo?','La ficha marca 2 horas de fundamentos de publicidad como pregrabadas. Confirma cómo se integran con el horario de la cohorte.'],['¿En qué plataformas haré campañas?','La ficha enumera Meta, TikTok y Google Ads. El alcance práctico de cada plataforma debe confirmarse.']]
+  },
+  {
+    slug:'diseno-creativo-con-ia', number:'03', name:'Diseño Creativo con IA', tier:'Pro 1', category:'Diseño', duration:'14 horas',
+    audience:'Diseñadores, creadores de contenido y equipos que producen comunicación visual.',
+    title:'Crea un sistema visual coherente, no imágenes sueltas.', short:'Combina fundamentos de diseño, Canva, CapCut y herramientas generativas para crear contenido consistente.',
+    pain:'Generar piezas rápido no garantiza que mantengan jerarquía, legibilidad o coherencia con la marca.',
+    outcome:'Practica criterios visuales, genera y adapta piezas, edita videos y desarrolla una campaña final en formatos para los canales elegidos.',
+    modules:[['Fundamentos de diseño y Canva Pro','2 h'],['Canva AI y diseño eficiente','2 h'],['CapCut Pro y video','4 h'],['Generación visual y consistencia','2 h'],['Proyecto final y optimización','4 h']],
+    tools:'Canva Pro, CapCut Pro, Nano Banana, ChatGPT/Gemini/Claude, Affinity o Illustrator y Krea u otras herramientas según el caso. Licencias por confirmar.',
+    artifact:'Campaña visual final con piezas estáticas y video, lista para exportación en formatos de destino.',
+    faqs:[['¿Debo ser diseñador profesional?','El programa incluye fundamentos visuales, pero la ficha no define un nivel previo requerido. Cuéntanos tu experiencia para orientarte.'],['¿Incluye las licencias de Canva o CapCut?','La ficha no especifica licencias incluidas. Confirma qué cuentas o planes necesitas antes de iniciar.'],['¿Qué programas vectoriales se utilizan?','El PDF plantea Affinity o Illustrator según la necesidad del proyecto.']]
+  },
+  {
+    slug:'publicidad-digital-ads', number:'04', name:'Publicidad Digital para Ads', tier:'Pro 2', category:'Publicidad', duration:'14 horas',
+    audience:'Profesionales de pauta, emprendedores y equipos que quieren planear o mejorar campañas digitales.',
+    title:'Planea y optimiza campañas con datos, creatividad e IA.', short:'Aprende a estructurar campañas, probar anuncios y leer señales de rendimiento en plataformas digitales.',
+    pain:'Activar anuncios no basta: hacen falta objetivos claros, audiencias, presupuesto, medición y un canal de seguimiento.',
+    outcome:'Conecta preparación de cuentas, campañas, creatividad, lectura de métricas y un plan de optimización alrededor del caso del participante.',
+    modules:[['Fundamentos técnicos y preparación*','2 h'],['Meta Ads e Instagram Ads','4 h'],['TikTok Ads o Google Ads con IA','4 h'],['Optimización y análisis','2 h'],['Estrategia y embudo de conversión','2 h']],
+    tools:'Meta Ads, Instagram Ads, TikTok Ads o Google Ads, modelos de IA, Canva AI y herramientas de analítica según el caso.',
+    artifact:'Campaña conectada a landing, WhatsApp o canal de cierre y plan de optimización de 30 días.',
+    faqs:[['¿Se ven TikTok Ads y Google Ads?','La ficha plantea TikTok Ads o Google Ads según el caso. Confirma la ruta de plataforma antes de inscribirte.'],['¿Necesito presupuesto de pauta?','El PDF no especifica si se requiere invertir en anuncios durante la práctica. Consulta las condiciones de la cohorte.'],['¿La preparación es en vivo?','La ficha marca los fundamentos técnicos como pregrabados. Confirma su integración con las horas programadas.']]
+  },
+  {
+    slug:'ia-para-administrativos', number:'05', name:'IA para Administrativos', tier:'Team', category:'Administración', duration:'14 horas',
+    audience:'Asistentes, coordinadores y equipos administrativos.',
+    title:'Más orden y capacidad de respuesta en la gestión administrativa.', short:'Aplica IA a documentos, comunicaciones, solicitudes y procesos repetitivos con revisión humana.',
+    pain:'Correos, documentos, actas y requerimientos dispersan la información y dejan poco espacio para mejorar los procesos.',
+    outcome:'Organiza información, prepara comunicaciones consistentes, diseña criterios de respuesta y prueba una automatización básica con controles.',
+    modules:[['Fundamentos de IA para administración','2 h'],['Organización de información y documentos','2 h'],['Comunicación administrativa eficiente','4 h'],['Respuestas y requerimientos','2 h'],['Flujos de trabajo y automatización','4 h']],
+    tools:'ChatGPT, Gemini, Claude, Microsoft Copilot, Google Workspace, Workspace Skills y Make. La ruta depende del ecosistema de la empresa.',
+    artifact:'Mapeo de un proceso administrativo y prueba de un flujo según las necesidades del cliente.',
+    faqs:[['¿Se adapta a Microsoft o Google?','El programa contempla Microsoft Copilot o Google Workspace según el ecosistema del cliente. La ruta se define al conversar.'],['¿Se automatizan procesos de mi empresa?','La ficha propone mapear y probar flujos básicos. Las integraciones se acuerdan según las plataformas y políticas de seguridad.'],['¿La inversión es para todo el equipo?','La unidad de cobro no está clara en el PDF. Solicita cotización indicando cuántas personas participarán.']]
+  },
+  {
+    slug:'automatizacion-y-agentes-ia', number:'06', name:'Automatización y Agentes de IA', tier:'PRO', category:'Automatización', duration:'14 horas',
+    audience:'Profesionales y equipos con procesos repetitivos que desean explorar automatización con control humano.',
+    title:'Diseña automatizaciones y agentes que trabajen contigo.', short:'Conecta contexto, instrucciones, herramientas y acciones para resolver tareas reales con pruebas y supervisión.',
+    pain:'Un flujo conectado puede fallar si no tiene permisos, validaciones o una forma segura de escalar cuando algo sale mal.',
+    outcome:'Distingue asistentes, workflows y agentes; diseña un flujo conectado, lo prueba y define controles, mantenimiento y supervisión.',
+    modules:[['Arquitectura de agentes: contexto y herramientas','2 h'],['Gestión administrativa: el auditor','2 h'],['Gestión comercial: el vendedor técnico','2 h'],['Planeación y producción: el coordinador','2 h'],['Automatización con Make','4 h'],['Despliegue, evaluación y supervisión','2 h']],
+    tools:'Make, Google AI Studio/Gemini, ChatGPT Work, Agents API, Claude Cowork, Workspace Skills y asistentes personalizados. Disponibilidad y nombres pueden cambiar.',
+    artifact:'Diseño de un flujo real del participante con pruebas, fallback humano y plan de mantenimiento.',
+    faqs:[['¿Construiré un agente?','La ficha incluye diseño de agentes, automatización y supervisión. El alcance depende del caso y de las herramientas disponibles.'],['¿Debo pagar licencias?','El documento no especifica qué planes están incluidos. Solicita los requisitos vigentes antes de iniciar.'],['¿Las herramientas que aparecen en el PDF siguen vigentes?','Los nombres y las funciones de productos cambian; NC AcademIA debe confirmar el temario y las herramientas de cada cohorte.']]
+  },
+  {
+    slug:'ia-para-comerciales', number:'07', name:'IA para Comerciales', tier:'Team', category:'Ventas', duration:'14 horas',
+    audience:'Vendedores, asesores, líderes comerciales y equipos de ventas.',
+    title:'Vende mejor con IA sin perder el toque humano.', short:'Investiga, prepara, responde, propone y da seguimiento con un proceso comercial más organizado.',
+    pain:'Investigar cuentas, preparar conversaciones, resolver objeciones y registrar seguimientos exige continuidad entre herramientas.',
+    outcome:'Practica investigación con fuentes, mensajes adaptados, propuestas, análisis comercial y automatización supervisada del seguimiento.',
+    modules:[['Fundamentos comerciales y diagnóstico*','2 h'],['Prospección e investigación con IA','2 h'],['Comunicación, objeciones y propuestas','4 h'],['Análisis comercial con IA','2 h'],['Automatización del seguimiento y CRM','4 h']],
+    tools:'ChatGPT, Gemini, Claude, CRM del cliente, Make, Google Workspace/Microsoft 365 y Canva AI si aplica.',
+    artifact:'Copiloto comercial y flujo de calificación o seguimiento bajo supervisión.',
+    faqs:[['¿Se integra con nuestro CRM?','La ficha considera el CRM del cliente, pero una integración depende de la plataforma, permisos y alcance acordado.'],['¿Sirve para un profesional individual?','El contenido aborda el ciclo comercial; consulta qué formatos individuales o de equipo están disponibles.'],['¿La inversión de USD 684 es por persona o grupo?','El PDF no lo aclara. La unidad de cobro debe confirmarse antes de cotizar.']]
+  },
+  {
+    slug:'ia-para-finanzas', number:'08', name:'IA para Finanzas', tier:'Premium', category:'Finanzas', duration:'Por confirmar',
+    audience:'Profesionales de finanzas, contabilidad, planeación y gestión.',
+    title:'Convierte tus datos financieros en decisiones mejor informadas.', short:'Usa IA para preparar datos, comparar periodos, explorar escenarios e informar hallazgos sin delegar el criterio financiero.',
+    pain:'Los datos financieros pueden tener faltantes o inconsistencias y cualquier conclusión necesita supuestos visibles y validación.',
+    outcome:'Prepara datos, analiza variaciones, explora presupuestos y escenarios y crea reportes recurrentes con trazabilidad.',
+    modules:[['Fundamentos de IA aplicada a finanzas','2 h'],['Herramientas actuales de IA','2 h'],['Preparación y análisis de datos financieros','4 h'],['Planeación y proyección financiera','4 h'],['Reportes, automatización y proyecto aplicado','4 h']],
+    tools:'ChatGPT, Gemini, Claude, Microsoft Copilot, Excel, Google Sheets y herramientas de visualización según el caso.',
+    artifact:'Proyecto aplicado a una necesidad financiera real, con revisión humana y trazabilidad.',
+    faqs:[['¿Cuántas horas dura?','El PDF presenta 14 horas en un resumen y 16 horas en el listado general; los módulos suman 16. La duración oficial está pendiente de confirmación.'],['¿La IA toma decisiones por mí?','El enfoque descrito es de apoyo al análisis. La validación y el criterio financiero permanecen en las personas responsables.'],['¿Qué datos puedo usar en las prácticas?','No compartas información confidencial con herramientas externas sin autorización de tu organización. El tratamiento de datos se debe acordar antes del curso.']]
+  },
+  {
+    slug:'ia-para-gerentes', number:'09', name:'IA para Gerentes', tier:'Premium', category:'Liderazgo', duration:'15 horas',
+    audience:'Gerentes, directivos, líderes de área y propietarios de empresas.',
+    title:'Lidera con IA: decide qué delegar y qué supervisar.', short:'Incorpora IA en tareas, análisis y procesos manteniendo criterio ejecutivo y control humano.',
+    pain:'No todas las decisiones o procesos se deben delegar a una herramienta; el liderazgo define dónde asistir, automatizar o mantener control.',
+    outcome:'Evalúa herramientas, practica rutinas ejecutivas, analiza información y elabora un mapa de delegación y adopción.',
+    modules:[['Diagnóstico ejecutivo','1 h'],['IA para líderes: ecosistema, modelos y criterio','4 h'],['Automatización de tareas ejecutivas','2 h'],['Análisis de datos para decisiones','4 h'],['Gestión de conocimiento organizacional','2 h'],['Liderazgo con agentes y hoja de ruta','2 h']],
+    tools:'ChatGPT Work, Gemini/Workspace Skills, Claude Cowork, Microsoft Copilot y herramientas de análisis/automatización según la empresa.',
+    artifact:'Mapa de delegación entre automatización, asistencia, supervisión humana y una hoja de ruta de adopción a 90 días.',
+    faqs:[['¿Es un curso técnico?','El programa se enfoca en liderazgo, criterio, procesos y decisiones; no está descrito como curso de programación.'],['¿Se usan datos de mi empresa?','El trabajo puede considerar retos propios. Acordaremos qué información se puede compartir y qué políticas internas aplicar.'],['¿Qué herramientas están incluidas?','El PDF nombra varias plataformas, pero no especifica licencias incluidas. Confirma acceso y herramientas vigentes.']]
+  },
+  {
+    slug:'ia-360-para-empresas', number:'10', name:'IA 360 para empresas', tier:'President', category:'Empresas', duration:'36 horas',
+    audience:'Empresas que quieren formar equipos y explorar IA en varias áreas y procesos.',
+    title:'Lleva la IA a distintas áreas de tu empresa.', short:'Un programa integral para explorar productividad, marketing, ventas, datos, automatización y agentes con criterio humano.',
+    pain:'La adopción aislada de herramientas puede dejar desconectados los procesos, los datos, los permisos y los criterios de cada área.',
+    outcome:'Recorre fundamentos y uso responsable hasta casos por área, automatización y un proyecto de implementación empresarial.',
+    modules:[['Fundamentos, uso responsable y prompting','4 h'],['Investigación, conocimiento y documentos','4 h'],['Productividad y administración','4 h'],['Marketing y contenido','4 h'],['Diseño y producción multimedia','4 h'],['Ventas y servicio al cliente','4 h'],['Datos y finanzas','4 h'],['Automatización de procesos','4 h'],['Agentes y proyecto IA 360','4 h']],
+    tools:'ChatGPT, Gemini, Claude, Microsoft Copilot, Google Workspace, Canva AI, CapCut, Make, Excel/Sheets y sistemas de la empresa según necesidad.',
+    artifact:'Proyecto IA 360 y plan de implementación definidos a partir de necesidades empresariales.',
+    faqs:[['¿Qué significa “hasta 3 estudiantes”?','La ficha no explica cómo aplica el límite a un programa empresarial. Confirmaremos cupos y opciones para equipos mayores.'],['¿Qué incluye la modalidad híbrida?','El PDF no detalla la proporción presencial/virtual ni los horarios; se deben acordar con la empresa.'],['¿Cuál es la inversión de USD 2.000?','La ficha lo llama precio de lanzamiento, pero unidad, vigencia y condiciones están pendientes de confirmación.'],['¿Se personaliza por área?','El programa contempla herramientas de la empresa según necesidad. El diagnóstico debe definir casos y sistemas posibles.']]
+  }
+];
+const editorial = {
+  'ia-facil-para-todos':['De la curiosidad a la primera aplicación útil.','Empieza con tareas que ya tienes.'],
+  'marketing-total-con-ia':['Publicar más no equivale a comunicar mejor.','Conecta la estrategia con cada pieza.'],
+  'diseno-creativo-con-ia':['Una imagen atractiva necesita una idea detrás.','Diseña una campaña con coherencia.'],
+  'publicidad-digital-ads':['Cada anuncio necesita una hipótesis clara.','Planea, prueba y aprende de las señales.'],
+  'ia-para-administrativos':['El orden abre espacio para hacer mejor el trabajo.','Convierte tareas dispersas en un flujo claro.'],
+  'automatizacion-y-agentes-ia':['Automatizar exige diseñar también el control.','Construye flujos que puedas supervisar.'],
+  'ia-para-comerciales':['Vender mejor empieza por entender mejor.','Prepara conversaciones y seguimiento con criterio.'],
+  'ia-para-finanzas':['Los datos necesitan contexto antes de decidir.','Analiza con trazabilidad y revisión humana.'],
+  'ia-para-gerentes':['La adopción de IA empieza con una decisión de liderazgo.','Traza una ruta clara para delegar y supervisar.'],
+  'ia-360-para-empresas':['Una empresa no cambia con herramientas aisladas.','Conecta personas, procesos y oportunidades.']
+};
+
+// Una frase corta y verificable por curso: lo que la persona se lleva (viene de la ficha del curso).
+const cue = {
+  'ia-facil-para-todos':'Sin conocimientos técnicos previos',
+  'marketing-total-con-ia':'Un caso práctico de principio a fin',
+  'diseno-creativo-con-ia':'Una campaña visual final en varios formatos',
+  'publicidad-digital-ads':'Un plan de optimización de 30 días',
+  'ia-para-administrativos':'Un proceso real mapeado y probado',
+  'automatizacion-y-agentes-ia':'Un flujo con pruebas y respaldo humano',
+  'ia-para-comerciales':'Un copiloto comercial con supervisión',
+  'ia-para-finanzas':'Un proyecto con revisión y trazabilidad',
+  'ia-para-gerentes':'Una hoja de ruta de adopción a 90 días',
+  'ia-360-para-empresas':'Un plan de implementación para tu empresa'
+};
+
+const SITE = 'https://www.negocioscreativos.net/ncacademia/cursos';
+// WhatsApp oficial (+57 3112095353): solo dígitos con prefijo. Mantener igual que assets/config.js.
+const WHATSAPP = '573112095353';
+// Glifo oficial de WhatsApp (Simple Icons, CC0), en blanco; se incrusta en línea para no depender de archivos externos.
+const waIcon = fs.readFileSync(path.join(root,'assets','brand','icons','whatsapp.svg'),'utf8').replace('<svg ','<svg aria-hidden="true" focusable="false" ').replace(/<title>.*?<\/title>/,'');
+// Botón flotante de WhatsApp: enlace directo a wa.me con mensaje precargado según la página.
+const floatWa = c => { const msg = c ? `Estoy interesad@ en curso personalizado de ${c.name}.` : 'Quiero más información de la academia y sus cursos.';
+  return `<a class="wa-float" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener noreferrer" data-course="${esc(c?c.slug:'orientacion')}" aria-label="Escribir por WhatsApp" title="Escribir por WhatsApp">${waIcon}<span>Escríbenos por WhatsApp</span></a>`; };
+const esc = s => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const title = c => `${c.name}${/\bIA\b/.test(c.name) ? '' : ' con IA aplicada'} | NC AcademIA`;
+const desc = c => `${c.short} Formación práctica en inteligencia artificial aplicada a ${c.category.toLowerCase()} en Colombia.`;
+const media = (c, prefix='../') => `${prefix}assets/media/${c.slug}.webp`;
+const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
+// Énfasis en las dos últimas palabras del titular, en la misma familia tipográfica (cursiva roja).
+const emph = t => { const w = t.split(' '); if (w.length < 4) return esc(t); return `${esc(w.slice(0,-2).join(' '))} <em>${esc(w.slice(-2).join(' '))}</em>`; };
+
+const header = (c, canonical, isIndex=false) => { const a=isIndex?'assets/':'../assets/'; return `<!doctype html>
+<html lang="es-CO"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0b"><meta name="color-scheme" content="dark">
+<title>${esc(isIndex?'Cursos de inteligencia artificial aplicada | NC AcademIA':title(c))}</title>
+<meta name="description" content="${esc(isIndex?'Cursos de inteligencia artificial aplicada para profesionales y empresas en Colombia. Encuentra una ruta práctica para tu rol.':desc(c))}">
+<meta name="author" content="NC AcademIA"><link rel="canonical" href="${canonical}"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="NC AcademIA">
+<meta property="og:title" content="${esc(isIndex?'IA aplicada al trabajo y los negocios | NC AcademIA':title(c))}"><meta property="og:description" content="${esc(isIndex?'Formación práctica en inteligencia artificial para profesionales y empresas.':desc(c))}"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${SITE}/assets/media/${isIndex?'ia-360-para-empresas':c.slug}.webp"><meta property="og:image:alt" content="${esc(isIndex?'Equipo profesional en formación de IA aplicada':`Escena profesional del curso ${c.name}`)}">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="${a}site.css"><link rel="icon" href="${a}brand/favicon.png" type="image/png"><link rel="apple-touch-icon" href="${a}brand/apple-touch-icon.png">
+</head>`; };
+
+const cta = (c, placement, label='Pedir información') =>
+  `<a class="button button--red wa-cta" href="#contacto" data-course="${esc(c?c.slug:'orientacion')}" data-placement="${esc(placement)}">${label} <span aria-hidden="true">↗</span></a>`;
+
+// Logo de Negocios Creativos (empresa matriz): solo en el home, junto al de NC AcademIA.
+const parentLogo = p => `<span class="brand-sep" aria-hidden="true"></span><a class="brand brand-parent" href="https://www.negocioscreativos.net/" aria-label="Negocios Creativos"><img src="${p}brand/logos/negocios-creativos-horizontal-blanco.png" alt="Negocios Creativos" width="117" height="24"></a>`;
+
+const nav = (c, isIndex) => { const home = isIndex ? '' : '../index.html'; const p = isIndex ? 'assets/' : '../assets/';
+  return `<header class="site-header"><div class="bar glass"><div class="brands"><a class="brand" href="${isIndex?'index.html':'../index.html'}" aria-label="NC AcademIA, inicio"><img src="${p}brand/logos/nc-academia-horizontal-negativo.png" alt="NC AcademIA" width="150" height="42"></a>${isIndex?parentLogo(p):''}</div><nav id="menu"><a href="${home}#programas">Programas</a><a href="${home}#metodo">Cómo aprendemos</a>${cta(c,'nav').replace('button--red','button--red button--sm')}</nav><button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span></button></div></header>`; };
+
+// GUIA: personaje institucional del manual 2026 (embajador visual). Imagen original del manual, sin alterar.
+const guiaFigure = p => `<figure class="guia-card glass" data-r><img src="${p}assets/brand/guia/guia-ejecutivo-16x9.webp" width="960" height="540" loading="lazy" alt="GUIA, el personaje de NC AcademIA, trabajando en su computador"><figcaption>GUIA, el embajador de NC AcademIA</figcaption></figure>`;
+
+const leadForm = c => { const slug = c ? c.slug : 'orientacion'; const name = c ? c.name : 'los cursos de NC AcademIA';
+  return `<form class="lead-form glass" data-lead data-course="${esc(slug)}" data-course-name="${esc(name)}" novalidate aria-labelledby="lead-title" data-r>
+<h3 id="lead-title">${c ? `Pide información de ${esc(c.name)}` : 'Cuéntanos qué quieres lograr'}</h3>
+<div class="field"><label for="f-nombre">Tu nombre</label><input id="f-nombre" name="nombre" autocomplete="name" required aria-describedby="f-nombre-err"><p class="err" id="f-nombre-err" role="alert"></p></div>
+<div class="field"><label for="f-contacto">Correo o WhatsApp</label><input id="f-contacto" name="contacto" autocomplete="email" placeholder="nombre@correo.com o tu número" required aria-describedby="f-contacto-err"><p class="err" id="f-contacto-err" role="alert"></p></div>
+<div class="field"><label for="f-perfil">¿Para quién es?</label><select id="f-perfil" name="perfil"><option value="para mí">Para mí</option><option value="para mi equipo o empresa">Para mi equipo o empresa</option></select></div>
+<div class="field"><label for="f-mensaje">Mensaje (opcional)</label><textarea id="f-mensaje" name="mensaje" rows="2" placeholder="Tu rol, tu reto o lo que quieres resolver"></textarea></div>
+<button class="button button--red" type="submit">Pedir información <span aria-hidden="true">↗</span></button>
+<p class="privacy">Al enviar se abre tu WhatsApp o tu correo con este mensaje, para que lo revises antes de mandarlo. Esta página no guarda tus datos.</p>
+</form>`; };
+
+const footer = (isIndex) => { const p = isIndex ? 'assets/' : '../assets/'; return `<footer class="site-footer"><div class="brands"><a class="brand" href="${isIndex?'index.html':'../index.html'}" aria-label="NC AcademIA, inicio"><img src="${p}brand/logos/nc-academia-horizontal-negativo.png" alt="NC AcademIA" width="150" height="42"></a>${isIndex?parentLogo(p):''}</div><p>Inteligencia artificial aplicada al trabajo real. El futuro se aprende haciendo.</p><div><a href="mailto:direccion@negocioscreativos.net">direccion@negocioscreativos.net</a><a href="https://www.negocioscreativos.net/ncacademia">Negocios Creativos ↗</a></div><small>© 2026 NC AcademIA, unidad académica de Negocios Creativos · Cali, Colombia</small></footer>`; };
+
+function page(c, index){
+  const canonical = `${SITE}/${c.slug}/`;
+  const schema = {"@context":"https://schema.org","@type":"Course",name:c.name,description:c.short,inLanguage:'es',provider:{"@type":"Organization",name:"NC AcademIA",sameAs:"https://www.negocioscreativos.net/ncacademia"}};
+  const related = Array.from({length:3},(_,j)=>courses[(index+j+1)%courses.length]);
+  const durationPending = c.duration === 'Por confirmar';
+  const facts = [
+    ['Duración', durationPending ? 'La confirmamos al contactarte' : c.duration],
+    ['Modalidad', 'Se confirma por cohorte'],
+    ['Fechas y horarios', 'Próxima programación'],
+    ['Inversión', 'Te la compartimos al contactarte'],
+    ['Certificado', 'Condiciones al contactarte'],
+    ['Docente asignado', 'Se confirma para la cohorte']
+  ];
+  return `${header(c,canonical)}<body class="course-page" data-course="${esc(c.slug)}" data-theme="${esc(c.slug)}">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+${nav(c,false)}
+<main id="contenido">
+<section class="hero"><img class="hero-media" src="${media(c)}" width="1344" height="768" alt="${esc(`Profesionales aplicando inteligencia artificial en ${c.category.toLowerCase()}`)}" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>${esc(c.name)}</strong></p><h1 style="--i:1">${emph(c.title)}</h1><p class="hero-lede" style="--i:2">${esc(c.short)}</p><div class="hero-actions" style="--i:3">${cta(c,'hero')}<a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">${esc(cue[c.slug])}</p><ul class="fact-list"><li><span>Duración</span><b>${esc(c.duration)}</b></li><li><span>Ruta</span><b>${esc(c.tier)}</b></li><li><span>Idioma</span><b>Español</b></li></ul><p class="fact-for">Para ${esc(lower(c.audience))}</p></aside></div></section>
+
+<section class="section reto"><h2 class="sec-title" data-r>${esc(editorial[c.slug][0])}</h2><div class="bento"><article class="glass tile tile-pain" data-r><h3>El reto</h3><p>${esc(c.pain)}</p></article><article class="glass tile tile-outcome" data-r style="--d:1"><h3>Lo que te llevas</h3><p class="lead">${esc(c.outcome)}</p><p class="sub">${esc(editorial[c.slug][1])}</p></article><article class="glass tile tile-cta" data-r style="--d:2"><p>Revisamos contigo la ruta y las condiciones de la próxima cohorte.</p>${cta(c,'reto')}</article></div></section>
+
+<section class="section program" id="programa"><div class="program-side" data-r><p class="eyebrow">El recorrido</p><h2>Un programa que va <em>de lo concreto</em> a lo aplicable.</h2><p>La ruta se basa en el temario compartido por NC AcademIA. Herramientas y horarios se confirman con cada cohorte.</p><div class="glass tools"><b>Herramientas del temario</b>${esc(c.tools)}</div></div><ol class="mods">${c.modules.map((m,i)=>`<li class="glass" data-r style="--d:${i%4}"><span class="no">${String(i+1).padStart(2,'0')}</span><h3>${esc(m[0])}</h3><span class="time">${esc(m[1])}</span></li>`).join('')}</ol></section>
+
+<section class="banner">${c.slug==='automatizacion-y-agentes-ia'?`<video class="banner-media" autoplay muted loop playsinline preload="none" poster="${media(c)}" aria-hidden="true"><source src="../assets/media/${c.slug}.mp4" type="video/mp4"></video>`:`<img class="banner-media" src="${media(c)}" width="1344" height="768" loading="lazy" alt="">`}<div class="banner-panel glass" data-r><h2>Un caso para trabajar. <em>Un aprendizaje que se conecta.</em></h2><p>${esc(c.artifact)}</p>${cta(c,'artifact')}</div></section>
+
+<section class="section audience"><h2 data-r>Hecho para personas que quieren <em>aplicar.</em></h2><p data-r>${esc(c.audience)}</p><div class="rail"><article class="glass" data-r><span class="dot">1</span><strong>Tu rol</strong><p>Partimos de tareas y decisiones que ya hacen parte de tu trabajo.</p></article><article class="glass" data-r style="--d:1"><span class="dot">2</span><strong>Tu caso</strong><p>La práctica se conecta con un ejercicio o proyecto del programa.</p></article><article class="glass" data-r style="--d:2"><span class="dot">3</span><strong>Tu siguiente paso</strong><p>Revisamos contigo la ruta y las condiciones antes de inscribirte.</p></article></div></section>
+
+<section class="section details"><div class="details-head"><h2 data-r>Resolvamos lo importante <em>antes de empezar.</em></h2>${cta(c,'details')}</div><div class="facts">${facts.map((f,i)=>`<div class="glass fact" data-r style="--d:${i%3}"><span>${esc(f[0])}</span><strong>${esc(f[1])}</strong></div>`).join('')}</div>${durationPending?'<p class="glass note">Estamos confirmando la duración final de este curso. Te la compartimos al contactarnos.</p>':''}</section>
+
+<section class="section"><div class="faq-wrap"><div data-r><h2>Preguntar también es <em>parte del proceso.</em></h2><p class="muted">Conversemos sobre el curso, tu contexto y las condiciones de la próxima cohorte.</p>${cta(c,'faq')}</div><div class="faq-list">${c.faqs.map((f,i)=>`<details class="faq-item glass" data-r style="--d:${i}" ${i===0?'open':''}><summary>${esc(f[0])}<span aria-hidden="true">+</span></summary><p>${esc(f[1])}</p></details>`).join('')}<details class="faq-item glass" data-r><summary>¿Qué certificado entrega el curso?<span aria-hidden="true">+</span></summary><p>La ficha lo presenta como curso certificado. Emisor, requisitos y condiciones están pendientes de confirmación; solicítalos antes de inscribirte.</p></details></div></div></section>
+
+<section class="section"><div class="related-head"><h2 data-r>Tu próximo paso puede ser <em>otro.</em></h2><a href="../index.html#programas" class="text-link">Ver todos los cursos ↗</a></div><div class="track">${related.map(r=>`<a class="rel glass" href="../${r.slug}/"><img src="${media(r)}" width="1344" height="768" loading="lazy" alt=""><div class="rel-body"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><p>${esc(r.short)}</p></div></a>`).join('')}</div></section>
+
+<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Tu trabajo real. <em>Una nueva forma de hacerlo.</em></h2><p data-r>Cuéntanos qué quieres aprender y te compartiremos las fechas, la modalidad y las condiciones confirmadas.</p><div class="assure" data-r><span class="chip">Sin costo</span><span class="chip">Sin compromiso</span><span class="chip">En español</span></div>${guiaFigure('../')}</div>${leadForm(c)}</div></section>
+</main>
+${footer(false)}
+${floatWa(c)}
+<div class="sticky-cta glass">${cta(c,'sticky')}</div>
+<script type="application/ld+json">${JSON.stringify(schema)}</script><script src="../assets/config.js"></script><script src="../assets/site.js" defer></script></body></html>`;
+}
+
+function indexPage(){
+  const canonical = `${SITE}/`;
+  const list = {"@context":"https://schema.org","@type":"ItemList",name:'Cursos de inteligencia artificial aplicada de NC AcademIA',itemListElement:courses.map((c,i)=>({"@type":"ListItem",position:i+1,url:`${SITE}/${c.slug}/`,item:{"@type":"Course",name:c.name,description:c.short,inLanguage:'es',provider:{"@type":"Organization",name:'NC AcademIA',sameAs:'https://www.negocioscreativos.net/ncacademia'}}}))};
+  return `${header(null,canonical,true)}<body class="index-page" data-theme="ia-360-para-empresas">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+${nav(null,true)}
+<main id="contenido">
+<section class="hero hero-index hero-guia"><img class="hero-media" src="assets/brand/guia/guia-portada-derecha.webp" width="1200" height="1350" alt="GUIA, el personaje de NC AcademIA, sentado con su computador entre luces rojas" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="eyebrow" style="--i:0"><span class="nc-name">NC AcademIA</span> · Colombia</p><h1 style="--i:1">La IA se aprende <em>aplicándola.</em></h1><p class="hero-lede" style="--i:2">Formación práctica en IA para tu profesión y tu empresa. Diez rutas con casos reales y criterio humano.</p><div class="hero-actions" style="--i:3"><a href="#programas" class="button button--red">Explorar los cursos <span aria-hidden="true">↓</span></a><a href="#metodo" class="text-link">Conoce el método</a></div></div></div></section>
+
+<section class="section" id="programas"><div class="cat-head"><h2 data-r>¿Qué parte de tu trabajo quieres <em>transformar?</em></h2><p class="muted" data-r>Elige por tu rol o necesidad y entra a la ruta pensada para ti.</p></div><div class="cat-grid">${courses.map((c,i)=>`<a href="${c.slug}/" class="cc glass" data-theme="${esc(c.slug)}" data-r style="--d:${i%3}"><div class="cc-visual"><img src="assets/media/${c.slug}.webp" width="1344" height="768" loading="${i<2?'eager':'lazy'}" alt=""><span class="cc-no">${c.number}</span></div><div class="cc-body"><div class="cc-meta"><span>${esc(c.category)}</span><span>${esc(c.duration)}</span></div><h3>${esc(c.name)}</h3><p>${esc(c.short)}</p><div class="cc-go"><span>${esc(cue[c.slug])}</span><b aria-hidden="true">↗</b></div></div></a>`).join('')}</div></section>
+
+<section class="section" id="metodo"><h2 class="sec-title" data-r>De la pregunta <em>a la práctica.</em></h2><div class="method"><article class="glass step" data-r><small>ENTENDER</small><h3>Ubica el reto</h3><p>Parte de una tarea, decisión o proceso de tu realidad.</p></article><article class="glass step" data-r style="--d:1"><small>EXPLORAR</small><h3>Prueba con criterio</h3><p>Elige herramientas y aprende a revisar sus resultados.</p></article><article class="glass step" data-r style="--d:2"><small>APLICAR</small><h3>Conecta con el trabajo</h3><p>Desarrolla ejercicios y entregables alrededor del caso.</p></article><article class="glass step" data-r style="--d:3"><small>CONTINUAR</small><h3>Define el siguiente paso</h3><p>Identifica cómo seguir practicando en tu rol o equipo.</p></article></div></section>
+
+<section class="section"><div class="duo"><div class="glass" data-r><h2>Una habilidad. <em>Un mejor flujo.</em></h2><p>Si aprendes por tu cuenta: cursos para llevar IA a marketing, diseño, ventas, finanzas, administración o liderazgo.</p></div><div class="glass" data-r style="--d:1"><h2>Un reto compartido. <em>Una ruta común.</em></h2><p>Si aprenden como equipo: conversemos sobre los procesos y los cursos empresariales disponibles.</p></div></div></section>
+
+<section class="section"><div class="glass guia-panel" data-r><div class="guia-copy"><h2>No necesitas dominar toda la IA. <em>Necesitas saber cuál usar y para qué.</em></h2><p>La práctica importa. También la privacidad, la verificación y la supervisión humana. GUIA, el embajador de NC AcademIA, acompaña ese camino.</p></div><img src="assets/brand/guia/guia-ejecutivo-4x3.webp" width="1254" height="945" loading="lazy" alt="GUIA, el personaje de NC AcademIA, trabajando en su computador"></div></section>
+
+<section class="section"><div class="faq-wrap"><div data-r><h2>Empieza por <em>lo que necesitas.</em></h2><p class="muted">Si tienes dudas sobre qué ruta corresponde a tu rol o equipo, podemos orientarte.</p>${cta(null,'index-faq')}</div><div class="faq-list"><details class="faq-item glass" data-r open><summary>¿Necesito conocimientos técnicos?<span aria-hidden="true">+</span></summary><p>Varios cursos están diseñados para aplicar IA a roles de negocio sin aprender programación. Revisa la ficha del curso elegido y consúltanos si tienes dudas.</p></details><details class="faq-item glass" data-r><summary>¿Los cursos son para personas o empresas?<span aria-hidden="true">+</span></summary><p>Hay contenidos para profesionales y opciones de capacitación para equipos. La disponibilidad, el tamaño de grupo y la adaptación se confirman según el programa.</p></details><details class="faq-item glass" data-r><summary>¿Cuándo empiezan y cuánto cuestan?<span aria-hidden="true">+</span></summary><p>Fechas, modalidad y condiciones de inversión se actualizan por cohorte. Solicita la información vigente antes de inscribirte.</p></details><details class="faq-item glass" data-r><summary>¿Entregan certificado?<span aria-hidden="true">+</span></summary><p>El material de algunos programas los presenta como cursos certificados. Emisor y requisitos deben confirmarse para cada curso.</p></details></div></div></section>
+
+<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Cuéntanos qué quieres <em>hacer mejor con IA.</em></h2><p data-r>Te ayudamos a encontrar el curso y te compartimos fechas, modalidad y condiciones confirmadas.</p><div class="assure" data-r><span class="chip">Sin costo</span><span class="chip">Sin compromiso</span><span class="chip">En español</span></div>${guiaFigure('')}</div>${leadForm(null)}</div></section>
+</main>
+${footer(true)}
+${floatWa(null)}
+<div class="sticky-cta glass">${cta(null,'sticky')}</div>
+<script type="application/ld+json">${JSON.stringify(list)}</script><script src="assets/config.js"></script><script src="assets/site.js" defer></script></body></html>`;
+}
+
+fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(path.join(out,'assets'),{recursive:true});
+for (let i=0;i<courses.length;i++) { const dir=path.join(out,courses[i].slug);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'index.html'),page(courses[i],i)); }
+fs.writeFileSync(path.join(out,'index.html'),indexPage());
+for (const f of ['site.css','site.js','config.js']) fs.copyFileSync(path.join(root,'assets',f),path.join(out,'assets',f));
+fs.cpSync(path.join(root,'assets','media'),path.join(out,'assets','media'),{recursive:true,filter:src=>!src.endsWith('.png')&&!src.endsWith('contact-sheet.jpg')});
+// Marca NC AcademIA: logos (negativo para fondo oscuro), isotipo, favicon e imágenes de GUIA. Se generan con scripts/prepare-brand-assets.py.
+fs.cpSync(path.join(root,'assets','brand'),path.join(out,'assets','brand'),{recursive:true});
+const brandDir=path.join(root,'assets','brand');
+const logoFile='brand/logos/nc-academia-horizontal-negativo.png';
+// Cada HTML entregado queda visualmente completo al abrirlo directo o previsualizarlo desde un ZIP.
+// Los archivos de assets/ siguen disponibles para despliegue en hosting/CDN.
+const embeddedCss=fs.readFileSync(path.join(root,'assets','site.css'),'utf8');
+const embeddedJs=fs.readFileSync(path.join(root,'assets','site.js'),'utf8');
+const embeddedLogo=`data:image/png;base64,${fs.readFileSync(path.join(brandDir,'logos','nc-academia-horizontal-negativo.png')).toString('base64')}`;
+const embeddedParent=`data:image/png;base64,${fs.readFileSync(path.join(brandDir,'logos','negocios-creativos-horizontal-blanco.png')).toString('base64')}`;
+const embeddedFavicon=`data:image/png;base64,${fs.readFileSync(path.join(brandDir,'favicon.png')).toString('base64')}`;
+const inline=(file,p)=>{
+  let html=fs.readFileSync(file,'utf8');
+  html=html.replace(`<link rel="stylesheet" href="${p}site.css">`,()=>`<style>${embeddedCss}</style>`);
+  html=html.replaceAll(`${p}${logoFile}`,()=>embeddedLogo);
+  html=html.replaceAll(`${p}brand/logos/negocios-creativos-horizontal-blanco.png`,()=>embeddedParent);
+  html=html.replace(`${p}brand/favicon.png`,()=>embeddedFavicon);
+  html=html.replace(`<script src="${p}config.js"></script><script src="${p}site.js" defer></script>`,()=>`<script>window.NC_LANDING_CONFIG={whatsappNumber:"${WHATSAPP}",email:"direccion@negocioscreativos.net"};</script><script>${embeddedJs}</script>`);
+  fs.writeFileSync(file,html);
+};
+for(const c of courses) inline(path.join(out,c.slug,'index.html'),'../assets/');
+inline(path.join(out,'index.html'),'assets/');
+fs.writeFileSync(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[`${SITE}/`,...courses.map(c=>`${SITE}/${c.slug}/`)].map(url=>`  <url><loc>${url}</loc></url>`).join('\n')}\n</urlset>`);
+fs.writeFileSync(path.join(out,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
+console.log(`Generated ${courses.length} course pages and index at ${out}`);

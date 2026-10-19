@@ -1,0 +1,8 @@
+# Configuración local de la previsualización (apunta a rutas temporales de la máquina)
+.claude/
+
+node_modules/
+*.log
+*.zip
+.DS_Store
+Thumbs.db

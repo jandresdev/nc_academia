@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="es-CO"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0a0b"><meta name="color-scheme" content="dark">
+<title>IA 360 para empresas | NC AcademIA</title>
+<meta name="description" content="Un programa integral para explorar productividad, marketing, ventas, datos, automatización y agentes con criterio humano. Formación práctica en inteligencia artificial aplicada a empresas en Colombia.">
+<meta name="author" content="NC AcademIA"><link rel="canonical" href="https://www.negocioscreativos.net/ncacademia/cursos/ia-360-para-empresas/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="NC AcademIA">
+<meta property="og:title" content="IA 360 para empresas | NC AcademIA"><meta property="og:description" content="Un programa integral para explorar productividad, marketing, ventas, datos, automatización y agentes con criterio humano. Formación práctica en inteligencia artificial aplicada a empresas en Colombia."><meta property="og:url" content="https://www.negocioscreativos.net/ncacademia/cursos/ia-360-para-empresas/"><meta property="og:image" content="https://www.negocioscreativos.net/ncacademia/cursos/assets/media/ia-360-para-empresas.webp"><meta property="og:image:alt" content="Escena profesional del curso IA 360 para empresas">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>/* NC AcademIA · landings
+   Sistema visual: aproximación web a "liquid glass" (backdrop-filter + bordes y brillos en capas).
+   No es un paquete oficial de Apple. Manual de marca NC AcademIA 2026: rojo institucional #F30206, negro #000000
+   y blanco #FFFFFF; tipografías Amaranth (títulos) y Muli (cuerpo; en Google Fonts se llama Mulish).
+   Un solo tema (oscuro), un solo acento (rojo). Radios: paneles 24px, controles 14px, botones píldora.
+   Contraste: el rojo de marca llega a ~4,5:1 sobre negro; en texto pequeño o sobre cristal se usa blanco con una marca roja. */
+:root {
+  --red: #f30206;
+  
+  
+  --bg: #000000;
+  --ink: #f5f2ed;
+  --ink-2: rgba(245, 242, 237, .74);
+  --ink-3: rgba(245, 242, 237, .56);
+  --edge: rgba(255, 255, 255, .17);
+  --r: 24px;
+  --r-sm: 14px;
+  --blur: 22px;
+  --display: 'Amaranth', Arial, sans-serif;
+  --sans: 'Mulish', 'Muli', Arial, sans-serif;
+  --max: 1240px;
+  --gutter: clamp(20px, 5vw, 72px);
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  /* Parámetros por curso (ver bloque de temas) */
+  --g1x: 82%; --g1y: 0%; --g1a: .32; --g2x: 4%; --g2y: 78%; --g2a: .14; --lift: .14;
+  --motif: none; --motif-size: auto;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; color-scheme: dark; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1, h2, h3, p, ol, ul { margin-top: 0; }
+img { max-width: 100%; }
+:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.skip-link { position: fixed; z-index: 90; left: 12px; top: -80px; background: #fff; color: #000; padding: 12px; border-radius: var(--r-sm); }
+.skip-link:focus { top: 12px; }
+
+/* Escenario: resplandores rojos fijos detrás de todo, para que el cristal tenga qué refractar */
+body::before {
+  content: ''; position: fixed; inset: -12vh 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(60vw 50vw at var(--g1x) var(--g1y), rgba(243, 2, 6, var(--g1a)), transparent 70%),
+    radial-gradient(50vw 44vw at var(--g2x) var(--g2y), rgba(243, 2, 6, var(--g2a)), transparent 70%),
+    var(--bg);
+}
+
+/* Material cristal */
+.glass {
+  position: relative; isolation: isolate; border-radius: var(--r);
+  background: linear-gradient(145deg, rgba(255, 255, 255, calc(var(--lift) + .02)), rgba(255, 255, 255, .03) 58%), rgba(14, 14, 16, .5);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(170%);
+  backdrop-filter: blur(var(--blur)) saturate(170%);
+  border: 1px solid var(--edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), inset 0 -1px 0 rgba(255, 255, 255, .05), 0 26px 60px rgba(0, 0, 0, .42);
+}
+.glass::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(380px circle at var(--mx, 18%) var(--my, 0%), rgba(255, 255, 255, .17), transparent 46%);
+  opacity: .8; transition: opacity .3s;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(26, 26, 29, .97); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass { background: rgba(26, 26, 29, .98); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .glass::before { display: none; }
+}
+
+/* Cabecera flotante */
+.site-header { position: sticky; top: 0; z-index: 40; padding: 14px var(--gutter) 0; pointer-events: none; }
+.bar { max-width: var(--max); margin: 0 auto; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 12px 0 22px; border-radius: 999px; pointer-events: auto; }
+.brand { display: flex; align-items: center; }
+.brand img { height: 36px; width: auto; display: block; }
+/* Home: logo de NC AcademIA junto al de Negocios Creativos (empresa matriz), separados por una línea fina */
+.brands { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.brand-sep { width: 1px; height: 26px; background: var(--edge); flex: none; }
+.brand-parent img { height: 22px; }
+.site-footer > div.brands { display: flex; text-align: left; font-size: inherit; }
+.site-header nav { display: flex; align-items: center; gap: 28px; font-size: 13px; font-weight: 700; }
+.site-header nav a:not(.button) { color: var(--ink-2); transition: color .2s; white-space: nowrap; }
+.site-header nav a:not(.button):hover { color: #fff; }
+.menu-toggle { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--edge); background: rgba(255, 255, 255, .06); cursor: pointer; font-size: 20px; line-height: 1; }
+
+/* Botones */
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 52px; padding: 0 26px; border-radius: 999px; font: 800 14px var(--sans); letter-spacing: .01em; white-space: nowrap; cursor: pointer; border: 0; transition: transform .25s var(--ease), box-shadow .25s, filter .2s; }
+.button--red { color: #fff; background: linear-gradient(180deg, var(--red) 0%, #c10104 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .42), 0 12px 32px rgba(243, 2, 6, .38); }
+.button--red:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 18px 40px rgba(243, 2, 6, .5); }
+.button:active { transform: translateY(1px) scale(.98); }
+.button--sm { min-height: 44px; padding: 0 20px; font-size: 13px; }
+.button span { font-size: 16px; }
+.text-link { font-size: 14px; font-weight: 800; color: var(--ink); border-bottom: 1px solid rgba(255, 255, 255, .4); padding: 8px 0 4px; transition: border-color .2s, color .2s; }
+.text-link:hover { border-color: var(--red); color: #fff; }
+
+/* Tipografía */
+.eyebrow { font: 800 11px var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--ink); margin: 0 0 22px; display: flex; align-items: center; gap: 12px; }
+.eyebrow::before { content: ''; width: 28px; height: 2px; background: var(--red); }
+.eyebrow .nc-name { text-transform: none; letter-spacing: .06em; font-size: 13px; }
+/* Insignia del hero de cada landing: deja claro de qué curso es la página */
+.course-badge { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; max-width: 100%; margin: 0 0 26px; padding: 11px 24px 11px 20px; border-radius: 28px; }
+.course-badge::after { content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 3px; background: var(--red); }
+.course-badge .cb-brand { font: 800 11px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.course-badge strong { font: 700 clamp(19px, 2vw, 26px)/1.15 var(--display); letter-spacing: -.01em; padding-left: 16px; border-left: 1px solid var(--edge); }
+h1 { font: 700 clamp(38px, 4.9vw, 70px)/1.02 var(--display); letter-spacing: -.03em; margin: 0 0 22px; text-wrap: balance; }
+h2 { font: 700 clamp(32px, 4.2vw, 58px)/1.06 var(--display); letter-spacing: -.025em; margin: 0; text-wrap: balance; }
+h1 em, h2 em { font-style: italic; color: var(--red); padding-right: .04em; }
+.muted { color: var(--ink-3); font-size: 14px; }
+
+/* Hero */
+.hero { position: relative; isolation: isolate; overflow: hidden; margin-top: -78px; padding: 150px var(--gutter) 80px; min-height: min(100dvh, 860px); display: flex; align-items: center; }
+.hero-media { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: 70% center; }
+.hero-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(90deg, rgba(8, 8, 9, .92) 0%, rgba(8, 8, 9, .66) 46%, rgba(8, 8, 9, .22) 100%), linear-gradient(0deg, var(--bg) 0%, transparent 34%); }
+.hero::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--motif); background-size: var(--motif-size); -webkit-mask-image: linear-gradient(100deg, transparent 20%, #000 90%); mask-image: linear-gradient(100deg, transparent 20%, #000 90%); }
+.hero-inner { width: 100%; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .7fr); gap: clamp(32px, 5vw, 80px); align-items: end; }
+.hero-lede { font-size: clamp(17px, 1.5vw, 20px); color: var(--ink-2); max-width: 540px; margin-bottom: 30px; }
+.hero-actions { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+.fact-panel { padding: 26px 26px 22px; }
+.fact-cue { font: 700 clamp(22px, 2.1vw, 28px)/1.15 var(--display); margin: 0 0 20px; }
+.fact-label { display: block; font: 800 11px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+.fact-list { margin: 0 0 18px; padding: 0; list-style: none; display: grid; gap: 0; }
+.fact-list li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-top: 1px solid rgba(255, 255, 255, .12); font-size: 14px; }
+.fact-list span { color: var(--ink-3); }
+.fact-list b { font-weight: 700; text-align: right; }
+.fact-for { margin: 0; font-size: 13px; color: var(--ink-2); line-height: 1.55; }
+.hero-copy > * { animation: rise .8s var(--ease) both; animation-delay: calc(var(--i, 0) * 80ms + 60ms); }
+.fact-panel { animation: rise .9s var(--ease) .35s both; }
+
+/* Secciones */
+.section { max-width: var(--max); margin: 0 auto; padding: clamp(72px, 9vw, 130px) var(--gutter); position: relative; }
+.sec-title { max-width: 860px; margin-bottom: clamp(28px, 4vw, 52px); }
+.bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.tile { padding: clamp(24px, 3vw, 40px); }
+.tile h3 { font: 700 15px var(--display); letter-spacing: .02em; color: var(--red); margin-bottom: 14px; }
+.tile p { margin: 0; }
+.tile-pain { grid-column: span 7; }
+.tile-pain p { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.5; }
+.tile-outcome { grid-column: span 5; grid-row: span 2; background: linear-gradient(160deg, rgba(243, 2, 6, .34), rgba(243, 2, 6, .08) 60%), rgba(14, 14, 16, .55); border-color: rgba(243, 2, 6, .55); }
+.tile-outcome .lead { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; margin-bottom: 22px; }
+.tile-outcome .sub { font: 700 clamp(20px, 2vw, 26px)/1.2 var(--display); }
+.tile-cta { grid-column: span 7; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap; min-height: 150px; }
+.tile-cta p { font-size: 16px; color: var(--ink-2); max-width: 380px; }
+
+.program { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.program-side { position: sticky; top: 110px; }
+.program-side .eyebrow { margin-bottom: 18px; }
+.program-side h2 { margin-bottom: 20px; }
+.program-side > p { color: var(--ink-2); font-size: 15px; margin-bottom: 26px; }
+.tools { padding: 20px 22px; font-size: 13px; color: var(--ink-2); }
+.tools b { display: block; font: 800 11px var(--sans); letter-spacing: .15em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+.mods { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: m; }
+.mods li { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 16px; padding: 20px 22px; transition: transform .3s var(--ease); }
+.mods li:hover { transform: translateX(6px); }
+.mods .no { font: 700 28px/1 var(--display); color: var(--red); }
+.mods h3 { font: 700 clamp(16px, 1.5vw, 19px)/1.25 var(--display); margin: 0; }
+.mods .time { font: 800 12px var(--sans); padding: 7px 13px; border-radius: 999px; background: rgba(255, 255, 255, .09); border: 1px solid rgba(255, 255, 255, .14); white-space: nowrap; }
+
+.banner { position: relative; isolation: isolate; overflow: hidden; padding: clamp(64px, 8vw, 110px) var(--gutter); }
+.banner-media { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 70% center; }
+.banner::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(8, 8, 9, .85), rgba(8, 8, 9, .35)); }
+.banner-panel { max-width: 640px; margin: 0 max(0px, calc((100vw - var(--max)) / 2)); padding: clamp(28px, 4vw, 48px); }
+.banner-panel h2 { font-size: clamp(28px, 3.4vw, 44px); margin-bottom: 16px; }
+.banner-panel p { color: var(--ink-2); font-size: 17px; margin-bottom: 26px; }
+
+.audience h2 { max-width: 780px; margin-bottom: 22px; }
+.audience > p { font-size: clamp(17px, 1.6vw, 21px); color: var(--ink-2); max-width: 680px; margin-bottom: 44px; }
+.rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; position: relative; }
+.rail::before { content: ''; position: absolute; left: 6%; right: 6%; top: 36px; height: 1px; background: linear-gradient(90deg, transparent, var(--red), transparent); z-index: -1; }
+.rail article { padding: 24px 24px 26px; }
+.rail .dot { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--red); font: 700 19px var(--display); margin-bottom: 18px; box-shadow: 0 0 0 6px rgba(243, 2, 6, .22); }
+.rail strong { display: block; font: 700 19px var(--display); margin-bottom: 6px; }
+.rail p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+.details-head { display: flex; justify-content: space-between; align-items: end; gap: 28px; flex-wrap: wrap; margin-bottom: 32px; }
+.details-head h2 { max-width: 700px; }
+.facts { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.fact { padding: 22px 24px; grid-column: span 2; }
+.fact:nth-child(1), .fact:nth-child(2) { grid-column: span 3; }
+.fact:nth-child(6) { grid-column: span 6; }
+.fact span { display: block; font-size: 12px; color: var(--ink-3); margin-bottom: 6px; }
+.fact strong { font: 700 clamp(16px, 1.5vw, 19px)/1.3 var(--display); }
+.note { margin-top: 16px; padding: 16px 20px; font-size: 13px; color: var(--ink-2); border-radius: var(--r-sm); }
+
+.faq-wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.faq-wrap h2 { margin-bottom: 20px; }
+.faq-wrap > div:first-child .muted { margin-bottom: 26px; max-width: 380px; }
+.faq-list { display: grid; gap: 12px; }
+.faq-item { padding: 0 24px; }
+.faq-item summary { display: flex; justify-content: space-between; align-items: center; gap: 20px; cursor: pointer; list-style: none; padding: 20px 0; font: 700 17px/1.3 var(--display); }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary span { font-size: 24px; color: var(--red); transition: transform .3s var(--ease); flex: none; }
+.faq-item[open] summary span { transform: rotate(45deg); }
+.faq-item p { margin: 0 0 22px; color: var(--ink-2); font-size: 15px; max-width: 620px; }
+
+.related-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; flex-wrap: wrap; margin-bottom: 30px; }
+.track { display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 360px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 4px 24px; margin: 0 -4px; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .25) transparent; }
+.rel { scroll-snap-align: start; overflow: hidden; display: flex; flex-direction: column; transition: transform .35s var(--ease); }
+.rel:hover { transform: translateY(-6px); }
+.rel img { width: 100%; height: 170px; object-fit: cover; object-position: 70% center; display: block; }
+.rel-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.rel-body small { font: 800 11px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+.rel-body h3 { font: 700 21px/1.15 var(--display); margin: 0; }
+.rel-body p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+/* Cierre con formulario */
+.final { position: relative; isolation: isolate; overflow: hidden; padding: clamp(72px, 9vw, 120px) var(--gutter); }
+.final::before { content: ''; position: absolute; z-index: -2; inset: 0; background: radial-gradient(70vw 60vw at 15% 100%, rgba(243, 2, 6, .55), transparent 65%), radial-gradient(50vw 40vw at 100% 0%, rgba(243, 2, 6, .25), transparent 70%); }
+.final::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--motif); background-size: var(--motif-size); -webkit-mask-image: linear-gradient(80deg, #000 0%, transparent 70%); mask-image: linear-gradient(80deg, #000 0%, transparent 70%); }
+.final-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 480px); gap: clamp(32px, 6vw, 90px); align-items: center; }
+.final h2 { font-size: clamp(36px, 5vw, 68px); margin-bottom: 20px; }
+.final-copy > p { font-size: 18px; color: var(--ink-2); max-width: 480px; }
+.final-copy .assure { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { display: inline-flex; align-items: center; min-height: 36px; padding: 0 15px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .18); }
+.lead-form { padding: clamp(22px, 3vw, 34px); display: grid; gap: 16px; }
+.lead-form h3 { font: 700 22px var(--display); margin: 0; }
+.field { display: grid; gap: 8px; }
+.field label { font-size: 13px; font-weight: 700; }
+.field input, .field select, .field textarea { width: 100%; min-height: 50px; padding: 12px 16px; border-radius: var(--r-sm); background: rgba(8, 8, 9, .68); border: 1px solid rgba(255, 255, 255, .28); color: #fff; font-size: 16px; transition: border-color .2s, box-shadow .2s; }
+.field textarea { min-height: 84px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: rgba(245, 242, 237, .5); }
+.field select { appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, #fff 50%), linear-gradient(135deg, #fff 50%, transparent 50%); background-position: calc(100% - 22px) 55%, calc(100% - 16px) 55%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 40px; }
+.field select option { background: #141416; color: #fff; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(243, 2, 6, .45); outline: none; }
+.field [aria-invalid="true"] { border-color: #ff8f88; }
+.field .err { min-height: 0; font-size: 13px; color: var(--ink); margin: 0; }
+.field .err:not(:empty) { padding-left: 10px; border-left: 3px solid var(--red); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.lead-form .button { width: 100%; }
+.privacy { font-size: 12px; color: var(--ink-3); margin: 0; line-height: 1.5; }
+.privacy a { text-decoration: underline; }
+
+.site-footer { padding: 40px var(--gutter) 28px; display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 24px; align-items: center; border-top: 1px solid rgba(255, 255, 255, .1); }
+.site-footer > p { font-size: 13px; color: var(--ink-3); max-width: 280px; margin: 0; }
+.site-footer > div { display: grid; gap: 6px; text-align: right; font-size: 13px; color: var(--ink-2); }
+.site-footer > small { grid-column: 1 / -1; color: var(--ink-3); font-size: 12px; }
+
+.sticky-cta { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 45; padding: 10px; border-radius: 999px; display: none; transform: translateY(140%); transition: transform .4s var(--ease); }
+.sticky-cta.on { transform: none; }
+.sticky-cta .button { width: 100%; }
+
+/* Botón flotante de WhatsApp: cristal oscuro, glifo blanco y borde rojo de marca; se expande con el texto al pasar el cursor */
+.wa-float { position: fixed; right: 20px; bottom: 20px; z-index: 46; height: 58px; min-width: 58px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border-radius: 999px; color: #fff; background: linear-gradient(145deg, rgba(255, 255, 255, .2), rgba(255, 255, 255, .05) 60%), rgba(14, 14, 16, .74); -webkit-backdrop-filter: blur(18px) saturate(170%); backdrop-filter: blur(18px) saturate(170%); border: 1.5px solid rgba(243, 2, 6, .85); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 14px 34px rgba(0, 0, 0, .5); transition: transform .3s var(--ease), bottom .4s var(--ease); animation: wa-in .7s var(--ease) 1.2s both, wa-pulse 2.6s ease-out 2.4s 2; }
+.wa-float svg { width: 27px; height: 27px; flex: none; display: block; }
+.wa-float span { max-width: 0; overflow: hidden; white-space: nowrap; font: 800 13px var(--sans); transition: max-width .45s var(--ease), margin .45s var(--ease); }
+.wa-float:hover, .wa-float:focus-visible { transform: translateY(-2px); }
+.wa-float:hover, .wa-float:focus-visible { padding: 0 22px 0 18px; }
+.wa-float:hover span, .wa-float:focus-visible span { max-width: 230px; margin-left: 10px; }
+.wa-float:active { transform: scale(.96); }
+@keyframes wa-in { from { opacity: 0; transform: translateY(18px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes wa-pulse { 0% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 14px 34px rgba(0, 0, 0, .5), 0 0 0 0 rgba(243, 2, 6, .55); } 100% { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 14px 34px rgba(0, 0, 0, .5), 0 0 0 20px rgba(243, 2, 6, 0); } }
+@media (prefers-reduced-transparency: reduce) { .wa-float { background: rgba(26, 26, 29, .98); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* Índice */
+.hero-index .hero-inner { grid-template-columns: minmax(0, 1fr); }
+.hero-index h1 { font-size: clamp(42px, 6.4vw, 92px); max-width: 900px; }
+.hero-index .hero-lede { max-width: 600px; }
+.cat-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 34px; }
+.cat-head h2 { max-width: 720px; }
+.cat-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.cc { grid-column: span 4; display: flex; flex-direction: column; overflow: hidden; min-height: 400px; transition: transform .4s var(--ease), border-color .3s; }
+.cc:nth-child(1) { grid-column: span 8; }
+.cc:nth-child(2) { grid-column: span 4; }
+.cc:nth-child(7) { grid-column: span 4; }
+.cc:nth-child(8) { grid-column: span 8; }
+.cc:hover { transform: translateY(-6px); border-color: rgba(243, 2, 6, .75); }
+.cc-visual { position: relative; height: 210px; overflow: hidden; flex: none; }
+.cc:nth-child(1) .cc-visual, .cc:nth-child(8) .cc-visual { height: 250px; }
+.cc-visual img { width: 100%; height: 100%; object-fit: cover; object-position: 72% center; transition: transform .6s var(--ease); display: block; }
+.cc:hover .cc-visual img { transform: scale(1.06); }
+.cc-visual::after { content: ''; position: absolute; inset: 0; background: var(--motif); background-size: var(--motif-size); mix-blend-mode: screen; opacity: .8; pointer-events: none; }
+.cc-no { position: absolute; z-index: 2; left: 16px; top: 14px; padding: 6px 12px; border-radius: 999px; font: 700 13px var(--display); background: rgba(10, 10, 11, .55); border: 1px solid rgba(255, 255, 255, .25); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.cc-body { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.cc-meta { display: flex; justify-content: space-between; gap: 12px; font: 800 11px var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--red); }
+.cc-meta span:last-child { color: var(--ink-3); }
+.cc h3 { font: 700 clamp(22px, 2vw, 28px)/1.1 var(--display); margin: 0; }
+.cc p { margin: 0; font-size: 14px; color: var(--ink-2); }
+.cc-go { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; font-size: 13px; font-weight: 800; }
+.cc-go b { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--red); transition: transform .3s var(--ease); }
+.cc:hover .cc-go b { transform: translate(3px, -3px); }
+
+.method { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; counter-reset: s; }
+.step { padding: 26px 24px 28px; }
+.step small { font: 800 12px var(--sans); letter-spacing: .14em; color: var(--red); }
+.step h3 { font: 700 21px/1.15 var(--display); margin: 18px 0 8px; }
+.step p { margin: 0; font-size: 14px; color: var(--ink-2); }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.duo .glass { padding: clamp(26px, 3.5vw, 44px); }
+.duo h2 { font-size: clamp(28px, 3.4vw, 44px); margin-bottom: 14px; }
+.duo p { color: var(--ink-2); margin: 0; }
+.duo .glass:last-child { background: linear-gradient(160deg, rgba(243, 2, 6, .3), rgba(243, 2, 6, .06) 60%), rgba(14, 14, 16, .55); }
+.statement { padding: clamp(32px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(24px, 5vw, 72px); align-items: center; }
+.statement h2 { font-size: clamp(30px, 4vw, 54px); }
+.statement p { color: var(--ink-2); font-size: 17px; margin: 0; }
+
+/* Contraste: etiquetas pequeñas en blanco con una marca roja (el rojo #F30206 queda para titulares, números grandes y acciones) */
+.fact-label, .tools b, .rel-body small, .step small, .cc-meta span:first-child, .tile h3 { color: var(--ink); }
+.fact-label::before, .tools b::before, .rel-body small::before, .step small::before, .cc-meta span:first-child::before, .tile h3::before { content: ''; display: inline-block; width: 14px; height: 2px; margin-right: 8px; vertical-align: middle; background: var(--red); }
+
+/* GUIA: personaje institucional del manual 2026 */
+.hero-guia .hero-media { left: auto; right: 0; width: min(68%, 980px); object-position: 40% 6%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 34%); mask-image: linear-gradient(90deg, transparent 0%, #000 34%); }
+.hero-guia .hero-shade { background: linear-gradient(0deg, var(--bg) 0%, transparent 28%); }
+.hero-guia::after { content: none; }
+.guia-card { margin: 30px 0 0; overflow: hidden; max-width: 460px; }
+.guia-card img { display: block; width: 100%; height: auto; }
+.guia-card figcaption { padding: 12px 18px 14px; font-size: 13px; color: var(--ink-2); }
+.guia-panel { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(24px, 5vw, 64px); align-items: center; padding: clamp(24px, 4vw, 48px); overflow: hidden; }
+.guia-copy h2 { font-size: clamp(28px, 3.6vw, 48px); }
+.guia-copy p { margin: 20px 0 0; font-size: 17px; color: var(--ink-2); max-width: 520px; }
+.guia-panel img { display: block; width: 100%; height: auto; border-radius: var(--r-sm); }
+
+/* Lenguaje visual del manual: hexágonos y circuitos como tramas sutiles */
+:root {
+  --hex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='48' viewBox='0 0 28 48'%3E%3Cpath d='M14 0L28 8V24L14 32L0 24V8Z M14 32V48' fill='none' stroke='white' stroke-opacity='.16' stroke-width='1'/%3E%3C/svg%3E");
+  --circuit: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='white' stroke-opacity='.26' stroke-width='1'%3E%3Cpath d='M0 30H40L52 42V80'/%3E%3Cpath d='M120 70H84L72 58V20'/%3E%3Cpath d='M20 120V96L34 82H64'/%3E%3Ccircle cx='52' cy='84' r='3'/%3E%3Ccircle cx='72' cy='16' r='3'/%3E%3Ccircle cx='68' cy='82' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Temas por curso: motivo, intensidad del brillo y luminosidad del cristal (solo rojo, negro y neutros) */
+[data-theme="ia-facil-para-todos"] { --motif: radial-gradient(rgba(255, 255, 255, .26) 1.5px, transparent 1.9px); --motif-size: 26px 26px; --g1a: .3; --lift: .19; --blur: 26px; }
+[data-theme="marketing-total-con-ia"] { --motif: repeating-linear-gradient(115deg, rgba(255, 255, 255, .09) 0 2px, transparent 2px 24px); --motif-size: auto; --g1a: .46; --g1x: 90%; --g2a: .22; }
+[data-theme="diseno-creativo-con-ia"] { --motif: repeating-radial-gradient(circle at 85% 25%, rgba(255, 255, 255, .11) 0 1px, transparent 1px 36px); --motif-size: auto; --g1a: .3; --g1x: 70%; --g1y: 10%; --lift: .2; --blur: 28px; }
+[data-theme="publicidad-digital-ads"] { --motif: linear-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .08) 1px, transparent 1px); --motif-size: 48px 48px; --g1a: .42; --g1x: 100%; --g1y: 100%; --g2y: 10%; --g2a: .1; }
+[data-theme="ia-para-administrativos"] { --motif: linear-gradient(rgba(255, 255, 255, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .055) 1px, transparent 1px); --motif-size: 22px 22px; --g1a: .17; --g2a: .08; --lift: .12; }
+[data-theme="automatizacion-y-agentes-ia"] { --motif: var(--circuit); --motif-size: 140px 140px; --g1a: .28; --g1x: 60%; --g1y: 0%; }
+[data-theme="ia-para-comerciales"] { --motif: conic-gradient(from 195deg at 100% 0%, rgba(243, 2, 6, .55), transparent 42%); --motif-size: auto; --g1a: .4; --g1x: 100%; --g1y: 0%; }
+[data-theme="ia-para-finanzas"] { --motif: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px); --motif-size: 16px 16px; --g1a: .13; --g2a: .06; --lift: .1; --blur: 18px; }
+[data-theme="ia-para-gerentes"] { --motif: repeating-radial-gradient(circle at 100% 100%, rgba(255, 255, 255, .08) 0 1px, transparent 1px 48px); --motif-size: auto; --g1a: .2; --g1x: 100%; --g1y: 100%; --g2a: .06; --lift: .1; }
+[data-theme="ia-360-para-empresas"] { --motif: var(--hex); --motif-size: 56px 96px; --g1a: .38; --g1x: 50%; --g1y: 30%; }
+.cc[data-theme] { --blur: 20px; }
+
+/* Entrada al hacer scroll (solo con JS; sin JS todo es visible) */
+.js [data-r] { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: calc(var(--d, 0) * 70ms); }
+.js [data-r].in { opacity: 1; transform: none; }
+/* Variantes de entrada: cada familia de bloque llega con su propio gesto, siempre corto y suave */
+.js .mods li[data-r] { transform: translateX(-28px); }
+.js .cc[data-r], .js .tile[data-r], .js .step[data-r], .js .fact[data-r] { transform: translateY(26px) scale(.97); }
+.js .lead-form[data-r] { transform: translateY(30px) scale(.98); }
+.js .mods li[data-r].in, .js .cc[data-r].in, .js .tile[data-r].in, .js .step[data-r].in, .js .fact[data-r].in, .js .lead-form[data-r].in { transform: none; }
+.assure .chip { transition: transform .3s var(--ease), background .3s; }
+.assure .chip:hover { transform: translateY(-2px); background: rgba(255, 255, 255, .14); }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 960px) {
+  .hero-inner, .program, .faq-wrap, .final-inner, .statement, .guia-panel { grid-template-columns: 1fr; }
+  .hero-guia .hero-media { width: 100%; opacity: .5; -webkit-mask-image: none; mask-image: none; }
+  .hero-guia .hero-shade { background: linear-gradient(0deg, rgba(0, 0, 0, .92) 0%, rgba(0, 0, 0, .55) 60%, rgba(0, 0, 0, .4) 100%); }
+  .program-side { position: static; }
+  .tile-pain, .tile-outcome, .tile-cta { grid-column: 1 / -1; grid-row: auto; }
+  .cc, .cc:nth-child(n) { grid-column: span 6; }
+  .method { grid-template-columns: repeat(2, 1fr); }
+  .rail { grid-template-columns: 1fr; }
+  .rail::before { display: none; }
+  .duo { grid-template-columns: 1fr; }
+  .facts { grid-template-columns: repeat(2, 1fr); }
+  .fact, .fact:nth-child(n) { grid-column: span 1; }
+  .fact:nth-child(6) { grid-column: 1 / -1; }
+  .hero-shade { background: linear-gradient(0deg, rgba(8, 8, 9, .95) 0%, rgba(8, 8, 9, .7) 55%, rgba(8, 8, 9, .35) 100%); }
+}
+@media (max-width: 860px) and (min-width: 641px) {
+  .site-header nav a:not(.button) { display: none; }
+}
+@media (max-width: 640px) {
+  .site-header { padding-top: 10px; }
+  .bar { height: 58px; padding-left: 16px; }
+  .brand img { height: 30px; }
+  .brands { gap: 10px; }
+  .brand-sep { height: 20px; }
+  .brand-parent img { height: 16px; }
+  .menu-toggle { display: grid; place-items: center; }
+  .site-header nav { display: none; position: absolute; top: 72px; left: var(--gutter); right: var(--gutter); flex-direction: column; align-items: stretch; gap: 14px; padding: 22px; border-radius: var(--r); background: rgba(16, 16, 18, .94); border: 1px solid var(--edge); pointer-events: auto; }
+  .site-header nav.is-open { display: flex; }
+  .hero { padding-top: 120px; padding-bottom: 56px; min-height: 0; }
+  .hero-actions .button { width: 100%; }
+  .two { grid-template-columns: 1fr; }
+  .mods li { grid-template-columns: 40px 1fr; row-gap: 8px; }
+  .mods .time { grid-column: 2; justify-self: start; }
+  .cc, .cc:nth-child(n) { grid-column: 1 / -1; min-height: 0; }
+  .method { grid-template-columns: 1fr; }
+  .site-footer { grid-template-columns: 1fr; }
+  .site-footer > div { text-align: left; }
+  .sticky-cta { display: block; }
+  .wa-float { right: 14px; bottom: 16px; height: 54px; min-width: 54px; }
+  body.has-sticky .wa-float { bottom: 92px; }
+  .wa-float span { display: none; }
+  .course-badge { padding: 12px 18px; }
+  .course-badge strong { flex-basis: 100%; padding-left: 0; border-left: 0; }
+  body { padding-bottom: 84px; }
+  .banner-panel { margin: 0; }
+}
+/* Movimiento ligado al scroll (CSS scroll-driven animations): solo transform y opacity, corre en el compositor,
+   sin listeners de scroll. Mejora progresiva: sin soporte o con movimiento reducido no se aplica y todo queda estático y legible. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Progreso de lectura: línea roja fina arriba de la página */
+    body::after { content: ''; position: fixed; z-index: 60; left: 0; right: 0; top: 0; height: 3px; pointer-events: none; transform-origin: 0 50%; background: linear-gradient(90deg, var(--red), var(--red)); animation: progress linear both; animation-timeline: scroll(root); }
+    /* Resplandor de fondo: se desplaza despacio, da profundidad al cristal */
+    body::before { animation: glow-drift linear both; animation-timeline: scroll(root); }
+    /* Hero: la foto se aleja y el panel de ficha flota un poco más lento que el texto */
+    .hero-media { animation: hero-drift linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+    .hero-copy { animation: hero-copy-out linear both; animation-timeline: scroll(root); animation-range: 0 70vh; }
+    .fact-panel { animation: rise .9s var(--ease) .35s both, panel-float linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 90vh; }
+    /* Banner de caso: la imagen se mueve más despacio que la página */
+    .banner-media { animation: banner-parallax linear both; animation-timeline: view(); animation-range: cover; }
+    /* Riel "tu rol, tu caso, tu siguiente paso": la línea se dibuja al llegar */
+    .rail::before { transform-origin: 0 50%; animation: draw linear both; animation-timeline: view(); animation-range: entry 20% cover 40%; }
+    .rail .dot { animation: dot-pop linear both; animation-timeline: view(); animation-range: entry 25% cover 35%; }
+    /* Módulos: el número se ilumina al cruzar el centro de la pantalla */
+    .mods .no { display: inline-block; animation: mod-focus linear both; animation-timeline: view(); animation-range: cover 32% cover 68%; }
+    /* Catálogo: la imagen de cada tarjeta se desplaza apenas mientras la tarjeta cruza la pantalla */
+    .cc-visual img { scale: 1.08; animation: card-drift linear both; animation-timeline: view(); animation-range: cover; }
+    /* Fondo del cierre: el brillo rojo sube al acercarse al formulario */
+    .final::before { animation: final-glow linear both; animation-timeline: view(); animation-range: entry 0% cover 60%; }
+  }
+}
+@keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes glow-drift { from { transform: translate3d(0, -5vh, 0); } to { transform: translate3d(0, 5vh, 0); } }
+@keyframes hero-drift { from { transform: scale(1.04) translate3d(0, 0, 0); } to { transform: scale(1.12) translate3d(0, 7vh, 0); } }
+@keyframes hero-copy-out { from { transform: none; opacity: 1; } to { transform: translate3d(0, -3vh, 0); opacity: .35; } }
+@keyframes panel-float { from { transform: none; } to { transform: translate3d(0, -4vh, 0); } }
+@keyframes banner-parallax { from { transform: scale(1.18) translate3d(0, -6%, 0); } to { transform: scale(1.18) translate3d(0, 6%, 0); } }
+@keyframes draw { from { transform: scaleX(0); opacity: .2; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes dot-pop { from { transform: scale(.7); } to { transform: scale(1); } }
+@keyframes mod-focus { 0%, 100% { transform: scale(1); color: var(--red); } 50% { transform: scale(1.16); color: #fff; } }
+@keyframes card-drift { from { translate: 0 -3%; } to { translate: 0 3%; } }
+@keyframes final-glow { from { transform: translate3d(0, 8%, 0); opacity: .5; } to { transform: none; opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .js [data-r] { opacity: 1; transform: none; }
+}
+</style><link rel="icon" href="data:image/png;base64,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" type="image/png"><link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+</head><body class="course-page" data-course="ia-360-para-empresas" data-theme="ia-360-para-empresas">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="site-header"><div class="bar glass"><div class="brands"><a class="brand" href="../index.html" aria-label="NC AcademIA, inicio"><img src="data:image/png;base64,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" alt="NC AcademIA" width="150" height="42"></a></div><nav id="menu"><a href="../index.html#programas">Programas</a><a href="../index.html#metodo">Cómo aprendemos</a><a class="button button--red button--sm wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="nav">Pedir información <span aria-hidden="true">↗</span></a></nav><button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span aria-hidden="true">☰</span></button></div></header>
+<main id="contenido">
+<section class="hero"><img class="hero-media" src="../assets/media/ia-360-para-empresas.webp" width="1344" height="768" alt="Profesionales aplicando inteligencia artificial en empresas" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>IA 360 para empresas</strong></p><h1 style="--i:1">Lleva la IA a distintas áreas de <em>tu empresa.</em></h1><p class="hero-lede" style="--i:2">Un programa integral para explorar productividad, marketing, ventas, datos, automatización y agentes con criterio humano.</p><div class="hero-actions" style="--i:3"><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="hero">Pedir información <span aria-hidden="true">↗</span></a><a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">Un plan de implementación para tu empresa</p><ul class="fact-list"><li><span>Duración</span><b>36 horas</b></li><li><span>Ruta</span><b>President</b></li><li><span>Idioma</span><b>Español</b></li></ul><p class="fact-for">Para empresas que quieren formar equipos y explorar IA en varias áreas y procesos.</p></aside></div></section>
+
+<section class="section reto"><h2 class="sec-title" data-r>Una empresa no cambia con herramientas aisladas.</h2><div class="bento"><article class="glass tile tile-pain" data-r><h3>El reto</h3><p>La adopción aislada de herramientas puede dejar desconectados los procesos, los datos, los permisos y los criterios de cada área.</p></article><article class="glass tile tile-outcome" data-r style="--d:1"><h3>Lo que te llevas</h3><p class="lead">Recorre fundamentos y uso responsable hasta casos por área, automatización y un proyecto de implementación empresarial.</p><p class="sub">Conecta personas, procesos y oportunidades.</p></article><article class="glass tile tile-cta" data-r style="--d:2"><p>Revisamos contigo la ruta y las condiciones de la próxima cohorte.</p><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="reto">Pedir información <span aria-hidden="true">↗</span></a></article></div></section>
+
+<section class="section program" id="programa"><div class="program-side" data-r><p class="eyebrow">El recorrido</p><h2>Un programa que va <em>de lo concreto</em> a lo aplicable.</h2><p>La ruta se basa en el temario compartido por NC AcademIA. Herramientas y horarios se confirman con cada cohorte.</p><div class="glass tools"><b>Herramientas del temario</b>ChatGPT, Gemini, Claude, Microsoft Copilot, Google Workspace, Canva AI, CapCut, Make, Excel/Sheets y sistemas de la empresa según necesidad.</div></div><ol class="mods"><li class="glass" data-r style="--d:0"><span class="no">01</span><h3>Fundamentos, uso responsable y prompting</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:1"><span class="no">02</span><h3>Investigación, conocimiento y documentos</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:2"><span class="no">03</span><h3>Productividad y administración</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:3"><span class="no">04</span><h3>Marketing y contenido</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:0"><span class="no">05</span><h3>Diseño y producción multimedia</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:1"><span class="no">06</span><h3>Ventas y servicio al cliente</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:2"><span class="no">07</span><h3>Datos y finanzas</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:3"><span class="no">08</span><h3>Automatización de procesos</h3><span class="time">4 h</span></li><li class="glass" data-r style="--d:0"><span class="no">09</span><h3>Agentes y proyecto IA 360</h3><span class="time">4 h</span></li></ol></section>
+
+<section class="banner"><img class="banner-media" src="../assets/media/ia-360-para-empresas.webp" width="1344" height="768" loading="lazy" alt=""><div class="banner-panel glass" data-r><h2>Un caso para trabajar. <em>Un aprendizaje que se conecta.</em></h2><p>Proyecto IA 360 y plan de implementación definidos a partir de necesidades empresariales.</p><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="artifact">Pedir información <span aria-hidden="true">↗</span></a></div></section>
+
+<section class="section audience"><h2 data-r>Hecho para personas que quieren <em>aplicar.</em></h2><p data-r>Empresas que quieren formar equipos y explorar IA en varias áreas y procesos.</p><div class="rail"><article class="glass" data-r><span class="dot">1</span><strong>Tu rol</strong><p>Partimos de tareas y decisiones que ya hacen parte de tu trabajo.</p></article><article class="glass" data-r style="--d:1"><span class="dot">2</span><strong>Tu caso</strong><p>La práctica se conecta con un ejercicio o proyecto del programa.</p></article><article class="glass" data-r style="--d:2"><span class="dot">3</span><strong>Tu siguiente paso</strong><p>Revisamos contigo la ruta y las condiciones antes de inscribirte.</p></article></div></section>
+
+<section class="section details"><div class="details-head"><h2 data-r>Resolvamos lo importante <em>antes de empezar.</em></h2><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="details">Pedir información <span aria-hidden="true">↗</span></a></div><div class="facts"><div class="glass fact" data-r style="--d:0"><span>Duración</span><strong>36 horas</strong></div><div class="glass fact" data-r style="--d:1"><span>Modalidad</span><strong>Se confirma por cohorte</strong></div><div class="glass fact" data-r style="--d:2"><span>Fechas y horarios</span><strong>Próxima programación</strong></div><div class="glass fact" data-r style="--d:0"><span>Inversión</span><strong>Te la compartimos al contactarte</strong></div><div class="glass fact" data-r style="--d:1"><span>Certificado</span><strong>Condiciones al contactarte</strong></div><div class="glass fact" data-r style="--d:2"><span>Docente asignado</span><strong>Se confirma para la cohorte</strong></div></div></section>
+
+<section class="section"><div class="faq-wrap"><div data-r><h2>Preguntar también es <em>parte del proceso.</em></h2><p class="muted">Conversemos sobre el curso, tu contexto y las condiciones de la próxima cohorte.</p><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="faq">Pedir información <span aria-hidden="true">↗</span></a></div><div class="faq-list"><details class="faq-item glass" data-r style="--d:0" open><summary>¿Qué significa “hasta 3 estudiantes”?<span aria-hidden="true">+</span></summary><p>La ficha no explica cómo aplica el límite a un programa empresarial. Confirmaremos cupos y opciones para equipos mayores.</p></details><details class="faq-item glass" data-r style="--d:1" ><summary>¿Qué incluye la modalidad híbrida?<span aria-hidden="true">+</span></summary><p>El PDF no detalla la proporción presencial/virtual ni los horarios; se deben acordar con la empresa.</p></details><details class="faq-item glass" data-r style="--d:2" ><summary>¿Cuál es la inversión de USD 2.000?<span aria-hidden="true">+</span></summary><p>La ficha lo llama precio de lanzamiento, pero unidad, vigencia y condiciones están pendientes de confirmación.</p></details><details class="faq-item glass" data-r style="--d:3" ><summary>¿Se personaliza por área?<span aria-hidden="true">+</span></summary><p>El programa contempla herramientas de la empresa según necesidad. El diagnóstico debe definir casos y sistemas posibles.</p></details><details class="faq-item glass" data-r><summary>¿Qué certificado entrega el curso?<span aria-hidden="true">+</span></summary><p>La ficha lo presenta como curso certificado. Emisor, requisitos y condiciones están pendientes de confirmación; solicítalos antes de inscribirte.</p></details></div></div></section>
+
+<section class="section"><div class="related-head"><h2 data-r>Tu próximo paso puede ser <em>otro.</em></h2><a href="../index.html#programas" class="text-link">Ver todos los cursos ↗</a></div><div class="track"><a class="rel glass" href="../ia-facil-para-todos/"><img src="../assets/media/ia-facil-para-todos.webp" width="1344" height="768" loading="lazy" alt=""><div class="rel-body"><small>Fundamentos</small><h3>IA fácil para todos</h3><p>Una base práctica para organizar, comunicar, investigar y crear con inteligencia artificial, desde cero.</p></div></a><a class="rel glass" href="../marketing-total-con-ia/"><img src="../assets/media/marketing-total-con-ia.webp" width="1344" height="768" loading="lazy" alt=""><div class="rel-body"><small>Marketing</small><h3>Marketing Total con IA</h3><p>Investiga, planea, produce y optimiza marketing digital con un flujo de trabajo asistido por IA.</p></div></a><a class="rel glass" href="../diseno-creativo-con-ia/"><img src="../assets/media/diseno-creativo-con-ia.webp" width="1344" height="768" loading="lazy" alt=""><div class="rel-body"><small>Diseño</small><h3>Diseño Creativo con IA</h3><p>Combina fundamentos de diseño, Canva, CapCut y herramientas generativas para crear contenido consistente.</p></div></a></div></section>
+
+<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Tu trabajo real. <em>Una nueva forma de hacerlo.</em></h2><p data-r>Cuéntanos qué quieres aprender y te compartiremos las fechas, la modalidad y las condiciones confirmadas.</p><div class="assure" data-r><span class="chip">Sin costo</span><span class="chip">Sin compromiso</span><span class="chip">En español</span></div><figure class="guia-card glass" data-r><img src="../assets/brand/guia/guia-ejecutivo-16x9.webp" width="960" height="540" loading="lazy" alt="GUIA, el personaje de NC AcademIA, trabajando en su computador"><figcaption>GUIA, el embajador de NC AcademIA</figcaption></figure></div><form class="lead-form glass" data-lead data-course="ia-360-para-empresas" data-course-name="IA 360 para empresas" novalidate aria-labelledby="lead-title" data-r>
+<h3 id="lead-title">Pide información de IA 360 para empresas</h3>
+<div class="field"><label for="f-nombre">Tu nombre</label><input id="f-nombre" name="nombre" autocomplete="name" required aria-describedby="f-nombre-err"><p class="err" id="f-nombre-err" role="alert"></p></div>
+<div class="field"><label for="f-contacto">Correo o WhatsApp</label><input id="f-contacto" name="contacto" autocomplete="email" placeholder="nombre@correo.com o tu número" required aria-describedby="f-contacto-err"><p class="err" id="f-contacto-err" role="alert"></p></div>
+<div class="field"><label for="f-perfil">¿Para quién es?</label><select id="f-perfil" name="perfil"><option value="para mí">Para mí</option><option value="para mi equipo o empresa">Para mi equipo o empresa</option></select></div>
+<div class="field"><label for="f-mensaje">Mensaje (opcional)</label><textarea id="f-mensaje" name="mensaje" rows="2" placeholder="Tu rol, tu reto o lo que quieres resolver"></textarea></div>
+<button class="button button--red" type="submit">Pedir información <span aria-hidden="true">↗</span></button>
+<p class="privacy">Al enviar se abre tu WhatsApp o tu correo con este mensaje, para que lo revises antes de mandarlo. Esta página no guarda tus datos.</p>
+</form></div></section>
+</main>
+<footer class="site-footer"><div class="brands"><a class="brand" href="../index.html" aria-label="NC AcademIA, inicio"><img src="data:image/png;base64,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" alt="NC AcademIA" width="150" height="42"></a></div><p>Inteligencia artificial aplicada al trabajo real. El futuro se aprende haciendo.</p><div><a href="mailto:direccion@negocioscreativos.net">direccion@negocioscreativos.net</a><a href="https://www.negocioscreativos.net/ncacademia">Negocios Creativos ↗</a></div><small>© 2026 NC AcademIA, unidad académica de Negocios Creativos · Cali, Colombia</small></footer>
+<a class="wa-float" href="https://wa.me/573112095353?text=Estoy%20interesad%40%20en%20curso%20personalizado%20de%20IA%20360%20para%20empresas." target="_blank" rel="noopener noreferrer" data-course="ia-360-para-empresas" aria-label="Escribir por WhatsApp" title="Escribir por WhatsApp"><svg aria-hidden="true" focusable="false" fill="#ffffff" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span>Escríbenos por WhatsApp</span></a>
+<div class="sticky-cta glass"><a class="button button--red wa-cta" href="#contacto" data-course="ia-360-para-empresas" data-placement="sticky">Pedir información <span aria-hidden="true">↗</span></a></div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"IA 360 para empresas","description":"Un programa integral para explorar productividad, marketing, ventas, datos, automatización y agentes con criterio humano.","inLanguage":"es","provider":{"@type":"Organization","name":"NC AcademIA","sameAs":"https://www.negocioscreativos.net/ncacademia"}}</script><script>window.NC_LANDING_CONFIG={whatsappNumber:"573112095353",email:"direccion@negocioscreativos.net"};</script><script>(() => {
+  const config = window.NC_LANDING_CONFIG || {};
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const emit = (eventName, detail) => {
+    window.dispatchEvent(new CustomEvent(`nc:${eventName}`, { detail }));
+    if (Array.isArray(window.dataLayer)) window.dataLayer.push({ event: `nc_${eventName}`, ...detail });
+  };
+
+  // Abre WhatsApp si hay número oficial; si no, un correo con el mensaje precargado.
+  const openContact = (course, message) => {
+    const number = String(config.whatsappNumber || '').replace(/\D/g, '');
+    if (number.length >= 10) {
+      window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    const subject = encodeURIComponent(`Información sobre ${course === 'orientacion' ? 'cursos NC AcademIA' : course}`);
+    const body = encodeURIComponent(`${message}\n\nPágina de origen: ${location.href}`);
+    window.location.href = `mailto:${config.email || 'direccion@negocioscreativos.net'}?subject=${subject}&body=${body}`;
+  };
+
+  // CTA: llevan al formulario de contacto de la misma página.
+  document.querySelectorAll('.wa-cta').forEach(link => {
+    link.addEventListener('click', event => {
+      emit('cta_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'unknown', page_path: location.pathname });
+      const target = document.querySelector('#contacto');
+      if (target && link.getAttribute('href') === '#contacto') {
+        event.preventDefault();
+        // Movimiento suave solo en distancias cortas: en una página larga, llegar rápido al formulario pesa más que animar el viaje.
+        const far = Math.abs(target.getBoundingClientRect().top) > window.innerHeight * 2;
+        target.scrollIntoView({ behavior: reduceMotion || far ? 'instant' : 'smooth', block: 'start' });
+        target.querySelectorAll('[data-r]').forEach(el => el.classList.add('in'));
+        const first = target.querySelector('input, select, textarea');
+        if (first) setTimeout(() => first.focus({ preventScroll: true }), reduceMotion || far ? 0 : 600);
+      }
+    });
+  });
+
+  // Botón flotante de WhatsApp: enlace directo (funciona sin JS); aquí solo se mide el clic.
+  document.querySelectorAll('.wa-float').forEach(link => link.addEventListener('click', () => {
+    emit('whatsapp_click', { course_id: link.dataset.course || 'unknown', placement: 'float', page_path: location.pathname });
+  }));
+
+  // Formulario de captación: valida, arma el mensaje y abre WhatsApp o correo para que la persona lo revise y lo envíe.
+  document.querySelectorAll('form[data-lead]').forEach(form => {
+    const setError = (input, text) => {
+      const err = form.querySelector(`#${input.id}-err`);
+      input.setAttribute('aria-invalid', text ? 'true' : 'false');
+      if (err) err.textContent = text || '';
+    };
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const f = form.elements;
+      let ok = true;
+      setError(f.nombre, ''); setError(f.contacto, '');
+      if (!f.nombre.value.trim()) { setError(f.nombre, 'Escribe tu nombre.'); ok = false; }
+      const contact = f.contacto.value.trim();
+      const looksEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+      const looksPhone = contact.replace(/\D/g, '').length >= 7;
+      if (!looksEmail && !looksPhone) { setError(f.contacto, 'Escribe un correo o un teléfono válido.'); ok = false; }
+      if (!ok) { form.querySelector('[aria-invalid="true"]').focus(); return; }
+      const course = form.dataset.course || 'orientacion';
+      const courseName = form.dataset.courseName || 'los cursos de NC AcademIA';
+      const lines = [
+        `Hola, soy ${f.nombre.value.trim()} y quiero información sobre ${courseName}.`,
+        `Es ${f.perfil.value}.`,
+        `Mi contacto: ${contact}.`,
+        f.mensaje.value.trim() ? `Mensaje: ${f.mensaje.value.trim()}` : '',
+        '¿Me comparten próximas fechas, modalidad y condiciones?'
+      ].filter(Boolean);
+      emit('lead_submit', { course_id: course, audience: f.perfil.value, page_path: location.pathname });
+      openContact(course, lines.join('\n'));
+    });
+    form.querySelectorAll('input').forEach(input => input.addEventListener('input', () => setError(input, '')));
+  });
+
+  document.querySelectorAll('.menu-toggle').forEach(button => button.addEventListener('click', () => {
+    const nav = button.closest('.site-header').querySelector('nav');
+    const open = nav.classList.toggle('is-open');
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  }));
+  document.querySelectorAll('.site-header nav a').forEach(a => a.addEventListener('click', () => {
+    const nav = a.closest('nav'); nav.classList.remove('is-open');
+    const t = nav.closest('.site-header').querySelector('.menu-toggle');
+    if (t) { t.setAttribute('aria-expanded', 'false'); t.setAttribute('aria-label', 'Abrir menú'); }
+  }));
+
+  // Entrada de secciones: feedback de jerarquía al llegar a cada bloque.
+  const reveal = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('in'); reveal.unobserve(entry.target); }
+  }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('[data-r]').forEach(el => reveal.observe(el));
+
+  // Brillo especular del cristal que sigue al puntero (variables CSS, sin re-render).
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    let frame = 0, last = null;
+    document.addEventListener('pointermove', event => {
+      last = event;
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const glass = last.target.closest && last.target.closest('.glass');
+        if (!glass) return;
+        const rect = glass.getBoundingClientRect();
+        glass.style.setProperty('--mx', `${last.clientX - rect.left}px`);
+        glass.style.setProperty('--my', `${last.clientY - rect.top}px`);
+      });
+    }, { passive: true });
+  }
+
+  // Barra fija de CTA en móvil: aparece al salir del hero y se oculta al llegar al formulario.
+  const sticky = document.querySelector('.sticky-cta');
+  const hero = document.querySelector('.hero');
+  const contact = document.querySelector('#contacto');
+  if (sticky && hero) {
+    let heroGone = false, atForm = false;
+    const sync = () => { const on = heroGone && !atForm; sticky.classList.toggle('on', on); document.body.classList.toggle('has-sticky', on); };
+    new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting; sync(); }, { threshold: 0 }).observe(hero);
+    if (contact) new IntersectionObserver(([e]) => { atForm = e.isIntersecting; sync(); }, { threshold: 0.2 }).observe(contact);
+  }
+
+  // Medición: vista y profundidad de scroll (50 % y 90 %).
+  const seen = new Set();
+  const depth = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const percent = entry.target.dataset.scrollDepth;
+    if (seen.has(percent)) return;
+    seen.add(percent);
+    emit(`scroll_${percent}`, { course_id: document.body.dataset.course || 'catalog', page_path: location.pathname });
+  }), { threshold: 0.15 });
+  const placeMarkers = () => {
+    document.querySelectorAll('[data-scroll-depth]').forEach(m => m.remove());
+    [50, 90].forEach(percent => {
+      const marker = document.createElement('span');
+      marker.setAttribute('aria-hidden', 'true'); marker.dataset.scrollDepth = String(percent);
+      marker.style.cssText = `position:absolute;width:1px;height:1px;pointer-events:none;top:${document.documentElement.scrollHeight * percent / 100}px;left:0;`;
+      document.body.append(marker); depth.observe(marker);
+    });
+  };
+  window.addEventListener('load', placeMarkers);
+  emit('view_landing', { course_id: document.body.dataset.course || 'catalog', page_path: location.pathname, source: new URLSearchParams(location.search).get('utm_source') || 'direct' });
+})();
+</script></body></html>
