@@ -35,9 +35,42 @@
     });
   });
 
-  // Disuasión ligera: sin menú contextual ni arrastre sobre imágenes y video. El texto sigue siendo seleccionable (accesibilidad, copiar el WhatsApp o el correo).
-  document.addEventListener('contextmenu', event => { if (event.target.closest && event.target.closest('img, video')) event.preventDefault(); });
-  document.addEventListener('dragstart', event => { if (event.target.tagName === 'IMG') event.preventDefault(); });
+  // Protección de contenido (disuasión): sin selección, copia, corte, arrastre, menú contextual, guardar, imprimir, ver código ni
+  // herramientas de desarrollo. Los campos del formulario quedan libres para escribir y pegar. Ninguna medida del lado del navegador
+  // es infalible; esto frena el copiado habitual y el curioseo, no a quien sabe saltarlo.
+  const NOTICE = 'Contenido protegido. © NC AcademIA. Todos los derechos reservados.';
+  const inField = target => !!(target && target.closest && target.closest('input, textarea, select, [contenteditable="true"]'));
+  const stop = event => { event.preventDefault(); event.stopPropagation(); return false; };
+  document.addEventListener('contextmenu', event => { if (!inField(event.target)) stop(event); });
+  document.addEventListener('selectstart', event => { if (!inField(event.target)) stop(event); });
+  document.addEventListener('dragstart', event => { if (!inField(event.target)) stop(event); });
+  ['copy', 'cut'].forEach(type => document.addEventListener(type, event => {
+    if (inField(event.target)) return;
+    stop(event);
+    if (event.clipboardData) event.clipboardData.setData('text/plain', NOTICE); // si algo llega a copiarse, el portapapeles lleva este aviso
+  }));
+  document.addEventListener('keydown', event => {
+    const key = String(event.key || '').toLowerCase();
+    const ctrl = event.ctrlKey || event.metaKey;
+    if (event.key === 'F12') return stop(event);
+    if (ctrl && event.shiftKey && ['i', 'j', 'c', 'k'].includes(key)) return stop(event); // Ctrl/Cmd+Shift+I, J, C, K
+    if (event.metaKey && event.altKey && ['i', 'j', 'c', 'u'].includes(key)) return stop(event); // Mac: Cmd+Opt+I, J, C, U
+    if (ctrl && ['u', 's', 'p'].includes(key)) return stop(event); // ver código, guardar, imprimir
+    if (ctrl && ['c', 'x', 'a'].includes(key) && !inField(event.target)) return stop(event); // copiar, cortar, seleccionar todo
+  }, true);
+
+  // Detección de herramientas de desarrollo: con el panel abierto, la instrucción debugger se detiene y el retraso lo delata.
+  // Sin el panel abierto no hace nada, así que no hay falsos positivos por zoom ni paneles laterales. Se omite en navegadores automatizados
+  // (Lighthouse, pruebas) y los buscadores no la activan. Al detectarla se oculta la página; al cerrar el panel y recargar, vuelve.
+  if (!navigator.webdriver) {
+    let guard = 0;
+    const lock = () => {
+      clearInterval(guard);
+      document.body.innerHTML = '<main style="min-height:100vh;display:grid;place-content:center;gap:12px;padding:24px;text-align:center;background:#000;color:#fff;font:600 18px/1.5 sans-serif"><strong style="font-size:26px">Contenido protegido</strong><span>Cierra las herramientas de desarrollo y recarga la página.</span></main>';
+    };
+    const probe = () => { const t = performance.now(); (function () { debugger; })(); if (performance.now() - t > 120) lock(); };
+    window.addEventListener('load', () => setTimeout(() => { guard = setInterval(probe, 1500); }, 3000));
+  }
 
   // Botón flotante de WhatsApp: enlace directo (funciona sin JS); aquí solo se mide el clic.
   document.querySelectorAll('.wa-float').forEach(link => link.addEventListener('click', () => {
