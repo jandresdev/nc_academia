@@ -182,11 +182,14 @@ const STORE = 'https://www.negocioscreativos.net';
 // Enlace del botón fuera del dominio de la tienda. Si la tienda habilita un enlace directo por curso, definir BUY_URL_TEMPLATE al compilar
 // (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=COP"; admite {id} y {slug}). Mientras no exista,
 // se abre la página de cursos de la tienda con parámetros de seguimiento.
-const buyHref = c => process.env.BUY_URL_TEMPLATE
+// Enlace de pago directo por curso (assets/payment-links.json, por ejemplo un enlace de Bold): si está lleno, manda sobre todo lo demás.
+const payLinks = JSON.parse(fs.readFileSync(path.join(root,'assets','payment-links.json'),'utf8'));
+const directLink = c => /^https:\/\//.test(payLinks[c.slug] || '') ? payLinks[c.slug] : '';
+const buyHref = c => directLink(c) || (process.env.BUY_URL_TEMPLATE
   ? process.env.BUY_URL_TEMPLATE.replaceAll('{id}', shop(c).productId).replaceAll('{slug}', c.slug)
-  : `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`;
+  : `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`);
 const buy = (c, placement, label='Inscribirme ahora') => { const p = shop(c); const product = {id:p.productId,name:p.title,price:p.priceCOP,image:p.imageUrl,description:p.description};
-  return `<a class="button button--red buy-cta" href="${buyHref(c)}" data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-product="${esc(JSON.stringify(product))}">${label} <span aria-hidden="true">↗</span></a>`; };
+  return `<a class="button button--red buy-cta" href="${buyHref(c)}"${directLink(c) ? ' data-direct="1" target="_blank" rel="noopener noreferrer"' : ''} data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-product="${esc(JSON.stringify(product))}">${label} <span aria-hidden="true">↗</span></a>`; };
 const advisorMsg = c => c ? `Estoy interesad@ en curso personalizado de ${c.name}.` : 'Quiero más información de la academia y sus cursos.';
 const advisor = (c, placement) => `<a class="button button--ghost wa-advisor" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(advisorMsg(c))}" target="_blank" rel="noopener noreferrer" data-course="${esc(c?c.slug:'orientacion')}" data-placement="${esc(placement)}">Hablar con un asesor</a>`;
 const cardSet = (c, prefix='../') => `src="${prefix}assets/media/card-${c.slug}-480.webp" srcset="${prefix}assets/media/card-${c.slug}-480.webp 480w, ${prefix}assets/media/card-${c.slug}.webp 900w"`;

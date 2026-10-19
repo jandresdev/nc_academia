@@ -86,7 +86,7 @@
     try { product = JSON.parse(link.dataset.product || '{}'); } catch (e) { product = {}; }
     emit('buy_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'unknown', price: product.price, currency: 'COP', page_path: location.pathname });
     const sameStore = /(^|\.)negocioscreativos\.net$/.test(location.hostname);
-    if (!sameStore || !product.id) return; // navegación normal al enlace
+    if (link.dataset.direct || !sameStore || !product.id) return; // navegación normal al enlace
     event.preventDefault();
     try {
       const saved = JSON.parse(localStorage.getItem('shopping-cart') || 'null') || { state: { cart: [] }, version: 0 };
@@ -98,7 +98,7 @@
       localStorage.setItem('shopping-cart', JSON.stringify(saved));
       localStorage.setItem('currency-storage', JSON.stringify({ state: { currency: 'COP' }, version: 0 })); // la landing muestra pesos; la persona aún puede cambiarlos
     } catch (e) { /* si el almacenamiento falla, el pago se abre igual y la persona elige el curso allí */ }
-    window.location.href = '/checkout'; // directo al pago: datos del cliente, método de pago y enlace de pago, sin pasar por el carrito
+    window.location.href = '/cart'; // carrito de la tienda con el curso agregado y el botón "Finalizar Compra" (su checkout guarda los datos del cliente que luego usa la confirmación)
   }));
 
   // Formulario de captación: valida, arma el mensaje y abre WhatsApp o correo para que la persona lo revise y lo envíe.

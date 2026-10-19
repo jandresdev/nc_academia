@@ -1,6 +1,6 @@
 # Publicar las landings en negocioscreativos.net/ncacademia/cursos/<curso>
 
-**Objetivo:** que cada landing viva en `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (el mismo dominio de la tienda). Así el botón **Inscribirme ahora** agrega el curso al carrito de la tienda y abre `/checkout` directo, sin que el cliente tenga que buscar nada.
+**Objetivo:** que cada landing viva en `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (el mismo dominio de la tienda). Así el botón **Inscribirme ahora** agrega el curso al carrito de la tienda y abre el carrito (`/cart`) con ese curso ya cargado y el botón **Finalizar Compra**, sin que el cliente tenga que buscar nada.
 
 **Por qué hace falta tocar la tienda:** el carrito y la moneda viven en el `localStorage` del navegador, que es propio de cada dominio. Una landing en otro dominio (por ejemplo `*.vercel.app`) no puede escribir en el carrito de `negocioscreativos.net`, y el servidor de pagos de la tienda (`/api/pyments/create-payment-link`) tampoco acepta llamadas desde otros dominios (no envía CORS). La solución es que la tienda **reenvíe** (rewrite) esas rutas al despliegue de las landings: el navegador sigue viendo `negocioscreativos.net` y todo funciona como una sola web.
 
@@ -58,7 +58,7 @@ Notas:
 - Se compilan en la estructura exacta de la ruta pública: `dist/ncacademia/cursos/<curso>/index.html` y `dist/ncacademia/cursos/assets/...`.
 - Todas las rutas internas son absolutas (`/ncacademia/cursos/assets/...`), el canonical es `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` y los enlaces a "Programas" y "Ver todos los cursos" van al catálogo de la tienda (`/ncacademia/cursos#cursos`).
 - `vercel.json` usa `trailingSlash: false` y las cabeceras de seguridad y caché bajo esa ruta: el proxy de la tienda nunca recibe una redirección.
-- El botón de compra, al estar en el dominio de la tienda, hace: agregar el curso a `shopping-cart`, poner `currency-storage` en COP y abrir `/checkout` (probado contra la tienda real).
+- El botón de compra, al estar en el dominio de la tienda, hace: agregar el curso a `shopping-cart`, poner `currency-storage` en COP y abrir `/cart` (probado contra la tienda real).
 - Para generar la versión autónoma (catálogo en la raíz, rutas relativas): `PUBLISH_BASE="" npm run build`.
 
 ## Sitemap y buscadores
@@ -95,10 +95,21 @@ curl -s https://www.negocioscreativos.net/ncacademia/cursos/sitemap-landings.xml
 
 En el navegador, con cada uno de los 10 cursos:
 1. La página carga con estilos, fuentes, logo e imágenes (sin errores en la consola).
-2. **Inscribirme ahora** abre `https://www.negocioscreativos.net/checkout` con el curso correcto en el resumen (en pesos colombianos) y en el primer paso (datos del cliente).
+2. **Inscribirme ahora** abre `https://www.negocioscreativos.net/cart` con el curso correcto en el carrito (precio en pesos colombianos) y el botón Finalizar Compra.
 3. El catálogo (`/ncacademia/cursos`) sigue funcionando igual.
 4. Ver código fuente: el `canonical` es `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (sin barra final).
 5. Enviar el sitemap en Google Search Console y solicitar la indexación de las 10 URL.
+
+## Por qué se respeta el carrito y el checkout de la tienda
+
+Se evaluó crear el pago desde las landings llamando al servidor de pagos de la tienda, y **no es seguro**: al volver del pago, la página de confirmación de la tienda (`/checkout/confirmation`) toma el nombre y el correo del cliente del `localStorage` de `negocioscreativos.net` (clave `customer-storage`, que llena su checkout) y desde ahí dispara los correos de confirmación. Un pago creado desde otro sitio se cobraría, pero la confirmación saldría sin esos datos. Por eso el botón pasa siempre por el carrito y el checkout de la tienda.
+
+## Opción más simple para el equipo de la tienda: enlace `/cart?add=<id>`
+
+Con un cambio pequeño en la página del carrito, el botón funcionaría **desde cualquier dominio** y no haría falta publicar en su dominio ni usar rewrites:
+
+- Al cargar `/cart`, si la URL trae `?add=<id-de-producto>` (los ids están en `assets/commerce.json` de este repositorio), buscar ese producto en su catálogo, agregarlo al store del carrito (`shopping-cart`) si no está, y limpiar el parámetro (`router.replace('/cart')`).
+- Luego, compilar las landings con `BUY_URL_TEMPLATE="https://www.negocioscreativos.net/cart?add={id}"` y el botón apuntará a ese enlace.
 
 ## Alternativa sin proxy
 
@@ -106,4 +117,4 @@ Si prefieren no reenviar a otro despliegue, pueden copiar el contenido de `dist/
 
 ## Mejora a futuro (opcional)
 
-Un enlace directo por curso en la tienda (por ejemplo `/checkout?curso=<id>&moneda=COP`) permitiría que el botón funcione desde cualquier dominio y haría innecesario el proxy. Si lo habilitan, basta compilar con `BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=COP"`.
+Un enlace directo por curso en la tienda (por ejemplo `/cart?add=<id>`) permitiría que el botón funcione desde cualquier dominio y haría innecesario el proxy. Si lo habilitan, basta compilar con `BUY_URL_TEMPLATE="https://www.negocioscreativos.net/cart?add={id}"`.
