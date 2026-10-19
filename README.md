@@ -20,7 +20,7 @@ Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>
 
 ## Configuración y CTA
 
-- El número oficial de WhatsApp es **+57 311 209 5353** (`573112095353`) y está en `assets/config.js` y en la constante `WHATSAPP` de `generate.mjs` (mantenerlos iguales; los HTML llevan la configuración incrustada). Si cambia, usar solo dígitos con prefijo internacional. No completar con un número tomado del PDF o de la web porque las fuentes disponibles discrepan.
+- El número oficial de WhatsApp es **+57 311 209 3653** (`573112093653`) y está en `assets/config.js` y en la constante `WHATSAPP` de `generate.mjs` (mantenerlos iguales; los HTML llevan la configuración incrustada). Si cambia, usar solo dígitos con prefijo internacional. No completar con un número tomado del PDF o de la web porque las fuentes disponibles discrepan.
 - Todas las páginas llevan un botón flotante de WhatsApp (abajo a la derecha) con mensaje precargado según el curso; en móvil se sitúa sobre la barra fija de CTA. Los CTA "Pedir información" y el formulario también abren WhatsApp con ese número.
 - Mientras el número esté vacío, los CTA abren un correo a `direccion@negocioscreativos.net` con curso y URL de origen.
 - La URL canónica se define en `generate.mjs`; ahora supone `https://www.negocioscreativos.net/ncacademia/cursos/`. Ajustarla al destino real antes de indexar.

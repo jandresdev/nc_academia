@@ -35,6 +35,10 @@
     });
   });
 
+  // Disuasión ligera: sin menú contextual ni arrastre sobre imágenes y video. El texto sigue siendo seleccionable (accesibilidad, copiar el WhatsApp o el correo).
+  document.addEventListener('contextmenu', event => { if (event.target.closest && event.target.closest('img, video')) event.preventDefault(); });
+  document.addEventListener('dragstart', event => { if (event.target.tagName === 'IMG') event.preventDefault(); });
+
   // Botón flotante de WhatsApp: enlace directo (funciona sin JS); aquí solo se mide el clic.
   document.querySelectorAll('.wa-float').forEach(link => link.addEventListener('click', () => {
     emit('whatsapp_click', { course_id: link.dataset.course || 'unknown', placement: 'float', page_path: location.pathname });

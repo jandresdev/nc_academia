@@ -118,7 +118,7 @@ for name, im in {
 parent_path = os.path.join(src, '..', '..', 'Negocios Creativos HB.png')
 if os.path.exists(parent_path):
     parent = crop_pad(Image.open(parent_path).convert('RGBA'), 0.0)
-    parent = parent.resize((720, round(720 * parent.height / parent.width)), Image.LANCZOS)
+    parent = parent.resize((400, round(400 * parent.height / parent.width)), Image.LANCZOS)  # se muestra a ~117 px: 400 px cubre pantallas 3x
     parent.save(os.path.join(logos_dir, 'negocios-creativos-horizontal-blanco.png'), optimize=True)
     print('logo negocios-creativos-horizontal-blanco', parent.size)
 
@@ -174,6 +174,8 @@ pdf_image(62).save(os.path.join(guia_dir, 'guia-ejecutivo-16x9.webp'), quality=8
 pdf_image(44).save(os.path.join(guia_dir, 'guia-ejecutivo-4x3.webp'), quality=84, method=6)
 cover = pdf_image(5)
 right = cover.crop((int(cover.width * 0.5), 0, cover.width, cover.height))  # mitad derecha: sin el título
-right = right.resize((1200, int(1200 * right.height / right.width)), Image.LANCZOS)
-right.save(os.path.join(guia_dir, 'guia-portada-derecha.webp'), quality=82, method=6)
+right = right.resize((1000, int(1000 * right.height / right.width)), Image.LANCZOS)  # 1000 px: suficiente para el hero y más liviana
+right.save(os.path.join(guia_dir, 'guia-portada-derecha.webp'), quality=72, method=6)
+# Variante de 720 px para móvil (el hero ocupa todo el ancho y la imagen va bajo un degradado oscuro)
+right.resize((720, int(720 * right.height / right.width)), Image.LANCZOS).save(os.path.join(guia_dir, 'guia-portada-derecha-720.webp'), quality=66, method=6)
 print('guia', os.listdir(guia_dir))

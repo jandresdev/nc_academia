@@ -3,5 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "scripts": { "build": "node generate.mjs" }
+  "scripts": {
+    "build": "node generate.mjs",
+    "qa": "node scripts/qa-check.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
 }
