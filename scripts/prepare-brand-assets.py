@@ -130,8 +130,22 @@ def square(im, size):
     return canvas.resize((size, size), Image.LANCZOS)
 
 
+# ---- Favicon: isotipo en color sobre fondo transparente (se ve bien en pestañas claras y oscuras) ----
 square(symbol_color, 64).save(os.path.join(out, 'favicon.png'), optimize=True)
-square(symbol_color, 180).save(os.path.join(out, 'apple-touch-icon.png'), optimize=True)
+# favicon.ico clásico con 16, 32 y 48 px: es el que los navegadores piden en la raíz del sitio.
+square(symbol_color, 256).save(os.path.join(out, 'favicon.ico'), sizes=[(16, 16), (32, 32), (48, 48)])
+square(symbol_color, 192).save(os.path.join(out, 'icon-192.png'), optimize=True)
+
+
+def on_black(im, size, ratio=0.62):
+    """Icono para iOS/Android: isotipo rojo sobre negro de marca, con margen (el sistema redondea las esquinas)."""
+    canvas = Image.new('RGB', (size, size), (0, 0, 0))
+    mark = square(im, int(size * ratio))
+    canvas.paste(mark, ((size - mark.width) // 2, (size - mark.height) // 2), mark)
+    return canvas
+
+
+on_black(symbol_color, 180).save(os.path.join(out, 'apple-touch-icon.png'), optimize=True)
 
 # ---- GUIA e imágenes del manual (extraídas del PDF) ----
 pdf = open(find('MANUAL DE MARCA NC ACADEMIA 2026.pdf'), 'rb').read()

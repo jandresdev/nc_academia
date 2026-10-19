@@ -171,7 +171,7 @@ const header = (c, canonical, isIndex=false) => { const a=isIndex?'assets/':'../
 <script>document.documentElement.classList.add('js')</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="${a}site.css"><link rel="icon" href="${a}brand/favicon.png" type="image/png"><link rel="apple-touch-icon" href="${a}brand/apple-touch-icon.png">
+<link rel="stylesheet" href="${a}site.css"><link rel="icon" href="${a}brand/favicon.ico" sizes="16x16 32x32 48x48"><link rel="icon" href="${a}brand/favicon.png" type="image/png" sizes="64x64"><link rel="apple-touch-icon" href="${a}brand/apple-touch-icon.png">
 </head>`; };
 
 const cta = (c, placement, label='Pedir información') =>
@@ -275,6 +275,8 @@ fs.cpSync(path.join(root,'assets','media'),path.join(out,'assets','media'),{recu
 // Marca NC AcademIA: logos (negativo para fondo oscuro), isotipo, favicon e imágenes de GUIA. Se generan con scripts/prepare-brand-assets.py.
 fs.cpSync(path.join(root,'assets','brand'),path.join(out,'assets','brand'),{recursive:true});
 const brandDir=path.join(root,'assets','brand');
+// Los navegadores piden /favicon.ico en la raíz del sitio aunque el HTML declare otro icono.
+fs.copyFileSync(path.join(brandDir,'favicon.ico'),path.join(out,'favicon.ico'));
 const logoFile='brand/logos/nc-academia-horizontal-negativo.png';
 // Cada HTML entregado queda visualmente completo al abrirlo directo o previsualizarlo desde un ZIP.
 // Los archivos de assets/ siguen disponibles para despliegue en hosting/CDN.
