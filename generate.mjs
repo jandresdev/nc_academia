@@ -145,6 +145,13 @@ const cue = {
 
 // URL pública base (canonical, sitemap, Open Graph). Para publicar en otro dominio: SITE_URL=https://mi-dominio.com npm run build
 const SITE = (process.env.SITE_URL || 'https://www.negocioscreativos.net/ncacademia/cursos').replace(/\/+$/,'');
+// Modo tienda: las landings se publican bajo la misma ruta de la tienda (https://www.negocioscreativos.net/ncacademia/cursos/<curso>, sin barra
+// final, como hace su Next.js) mediante un rewrite de la tienda hacia este despliegue. Es el modo por defecto, porque Vercel lee vercel.json del
+// repositorio y debe corresponder a esta estructura. Así el navegador ve todo bajo negocioscreativos.net y el botón de compra puede escribir
+// en el carrito de la tienda. Para generar la versión autónoma (catálogo en la raíz, rutas relativas): PUBLISH_BASE="" npm run build.
+const PUBLISH_BASE = (process.env.PUBLISH_BASE ?? '/ncacademia/cursos').replace(/\/+$/,'');
+const SLASH = PUBLISH_BASE ? '' : '/';
+const ROOT_URL = `${SITE}${SLASH}`;
 // WhatsApp oficial (+57 3112093653): solo dígitos con prefijo. Mantener igual que assets/config.js.
 const WHATSAPP = '573112093653';
 // Glifo oficial de WhatsApp (Simple Icons, CC0), en blanco; se incrusta en línea para no depender de archivos externos.
@@ -245,7 +252,7 @@ const indexFaqs = [
 ];
 
 function page(c, index){
-  const canonical = `${SITE}/${c.slug}/`;
+  const canonical = `${SITE}/${c.slug}${SLASH}`;
   const p = shop(c);
   const price = fmtCOP(p.priceCOP), priceUSD = fmtUSD(p.priceUSD);
   const howFaq = ['¿Cómo me inscribo y pago?','Pulsa «Inscribirme ahora»: el curso se agrega al carrito de Negocios Creativos, eliges la moneda (pesos colombianos o dólares) y finalizas la compra en línea. Si prefieres, un asesor te acompaña por WhatsApp.'];
@@ -255,7 +262,7 @@ function page(c, index){
     {"@type":"Course","@id":`${canonical}#course`,name:c.name,description:c.short,url:canonical,inLanguage:"es",provider:{"@id":ORG_ID},image:`${SITE}/assets/og/${c.slug}.jpg`,teaches:c.outcome,audience:{"@type":"Audience",audienceType:c.audience},
       offers:{"@type":"Offer",price:p.priceCOP,priceCurrency:"COP",category:"Paid",availability:"https://schema.org/InStock",url:canonical},
       hasCourseInstance:{"@type":"CourseInstance",courseMode:"online",courseWorkload:isoHours(c.duration)}},
-    {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Cursos de IA",item:`${SITE}/`},{"@type":"ListItem",position:2,name:c.name,item:canonical}]},
+    {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Cursos de IA",item:ROOT_URL},{"@type":"ListItem",position:2,name:c.name,item:canonical}]},
     faqNode([...faqs,certFaq])]};
   const related = Array.from({length:3},(_,j)=>courses[(index+j+1)%courses.length]);
   const facts = [
@@ -295,10 +302,10 @@ ${floatWa(c)}
 }
 
 function indexPage(){
-  const canonical = `${SITE}/`;
+  const canonical = ROOT_URL;
   const list = {"@context":"https://schema.org","@graph":[orgNode,
-    {"@type":"WebSite","@id":`${SITE}/#website`,url:`${SITE}/`,name:"NC AcademIA",inLanguage:"es-CO",publisher:{"@id":ORG_ID}},
-    {"@type":"ItemList",name:'Cursos de inteligencia artificial aplicada de NC AcademIA',itemListElement:courses.map((c,i)=>({"@type":"ListItem",position:i+1,url:`${SITE}/${c.slug}/`,item:{"@type":"Course",name:c.name,description:c.short,inLanguage:'es',provider:{"@id":ORG_ID}}}))},
+    {"@type":"WebSite","@id":`${SITE}/#website`,url:ROOT_URL,name:"NC AcademIA",inLanguage:"es-CO",publisher:{"@id":ORG_ID}},
+    {"@type":"ItemList",name:'Cursos de inteligencia artificial aplicada de NC AcademIA',itemListElement:courses.map((c,i)=>({"@type":"ListItem",position:i+1,url:`${SITE}/${c.slug}${SLASH}`,item:{"@type":"Course",name:c.name,description:c.short,inLanguage:'es',provider:{"@id":ORG_ID}}}))},
     faqNode(indexFaqs)]};
   return `${header(null,canonical,true)}<body class="index-page" data-theme="ia-360-para-empresas">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -363,15 +370,28 @@ const inline=(file,p)=>{
 };
 for(const c of courses) inline(path.join(out,c.slug,'index.html'),'../assets/');
 inline(path.join(out,'index.html'),'assets/');
+if (PUBLISH_BASE) {
+  // Las landings se sirven sin barra final (/ncacademia/cursos/<curso>), donde "../" ya no apunta a la raíz del sitio: se pasan a rutas absolutas.
+  for (const c of courses) {
+    const f = path.join(out, c.slug, 'index.html');
+    let html = fs.readFileSync(f, 'utf8');
+    html = html.replaceAll('../assets/', `${PUBLISH_BASE}/assets/`)
+      .replaceAll('"../index.html#programas"', `"${PUBLISH_BASE}#cursos"`)
+      .replaceAll('"../index.html#metodo"', '"/ncacademia"')
+      .replaceAll('"../index.html"', '"/ncacademia"');
+    for (const o of courses) html = html.replaceAll(`href="../${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
+    fs.writeFileSync(f, html);
+  }
+}
 
 // ---- Indexación: sitemap, robots y llms.txt ----
 const today = new Date().toISOString().slice(0,10);
-fs.writeFileSync(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[`${SITE}/`,...courses.map(c=>`${SITE}/${c.slug}/`)].map((url,i)=>`  <url><loc>${url}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${i===0?'1.0':'0.8'}</priority></url>`).join('\n')}\n</urlset>\n`);
+fs.writeFileSync(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...(PUBLISH_BASE?[]:[ROOT_URL]),...courses.map(c=>`${SITE}/${c.slug}${SLASH}`)].map((url,i)=>`  <url><loc>${url}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${i===0?'1.0':'0.8'}</priority></url>`).join('\n')}\n</urlset>\n`);
 // Política para IA: se bloquean los rastreadores de ENTRENAMIENTO (el contenido es propio) y se permiten los de búsqueda y respuestas
 // (Googlebot, Bingbot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, Claude-User), que son los que traen visitas y citas.
 const trainingBots = ['GPTBot','ClaudeBot','anthropic-ai','CCBot','Google-Extended','Applebot-Extended','Bytespider','Meta-ExternalAgent','cohere-ai','Diffbot','ImagesiftBot'];
 fs.writeFileSync(path.join(out,'robots.txt'),`User-agent: *\nAllow: /\n\n# Rastreadores de entrenamiento de IA: no permitidos\n${trainingBots.map(b=>`User-agent: ${b}\nDisallow: /\n`).join('\n')}\nSitemap: ${SITE}/sitemap.xml\n`);
-fs.writeFileSync(path.join(out,'llms.txt'),`# NC AcademIA\n\n> NC AcademIA es la unidad académica de Negocios Creativos (Cali, Colombia). Ofrece formación práctica en inteligencia artificial aplicada para profesionales y empresas, en español. Idea central: la IA se aprende aplicándola.\n\n## Cursos\n\n${courses.map(c=>`- [${c.name}](${SITE}/${c.slug}/): ${c.short} Duración: ${c.duration}.`).join('\n')}\n\n## Contacto\n\n- WhatsApp: +57 311 209 3653\n- Correo: direccion@negocioscreativos.net\n- Sitio de la academia: https://www.negocioscreativos.net/ncacademia\n\n## Notas\n\n- Fechas, modalidad, inversión y certificado se confirman por cohorte; no están publicados como datos fijos.\n- Catálogo y rutas por rol: ${SITE}/\n`);
+fs.writeFileSync(path.join(out,'llms.txt'),`# NC AcademIA\n\n> NC AcademIA es la unidad académica de Negocios Creativos (Cali, Colombia). Ofrece formación práctica en inteligencia artificial aplicada para profesionales y empresas, en español. Idea central: la IA se aprende aplicándola.\n\n## Cursos\n\n${courses.map(c=>`- [${c.name}](${SITE}/${c.slug}${SLASH}): ${c.short} Duración: ${c.duration}.`).join('\n')}\n\n## Contacto\n\n- WhatsApp: +57 311 209 3653\n- Correo: direccion@negocioscreativos.net\n- Sitio de la academia: https://www.negocioscreativos.net/ncacademia\n\n## Notas\n\n- Fechas, modalidad, inversión y certificado se confirman por cohorte; no están publicados como datos fijos.\n- Catálogo y rutas por rol: ${ROOT_URL}\n`);
 
 // ---- Seguridad y caché: vercel.json (se regenera en cada compilación; contiene los hashes de los scripts en línea) ----
 const csp = ["default-src 'self'",`script-src 'self' ${[...inlineScriptHashes].join(' ')}`,"style-src 'self' 'unsafe-inline'","img-src 'self' data:","font-src 'self'","media-src 'self'","connect-src 'self'","object-src 'none'","base-uri 'none'","form-action 'self'","frame-ancestors 'none'","upgrade-insecure-requests"].join('; ');
@@ -390,5 +410,19 @@ const vercel = {
     {source:'/(robots.txt|sitemap.xml|llms.txt)',headers:[h('Cache-Control','public, max-age=3600')]}
   ]
 };
+if (PUBLISH_BASE) {
+  vercel.trailingSlash = false; // la tienda sirve sin barra final: aquí /curso responde 200 y /curso/ redirige a /curso, así el proxy de la tienda nunca recibe un 308
+  vercel.headers = vercel.headers.map(r => r.source === '/(.*)' ? r : { ...r, source: r.source.replace(/^\/\(?/, m => `${PUBLISH_BASE}${m}`) });
+  vercel.headers.forEach(r => { if (r.source.includes('robots.txt')) r.source = `${PUBLISH_BASE}/(sitemap-landings.xml|llms.txt)`; });
+}
 fs.writeFileSync(path.join(root,'vercel.json'),JSON.stringify(vercel,null,2)+'\n');
+if (PUBLISH_BASE) {
+  // Estructura de salida: dist/ncacademia/cursos/<curso>/index.html y dist/ncacademia/cursos/assets/..., idéntica a la ruta pública.
+  const target = path.join(out, ...PUBLISH_BASE.split('/').filter(Boolean));
+  fs.mkdirSync(target, { recursive: true });
+  for (const name of [...courses.map(c => c.slug), 'assets']) fs.renameSync(path.join(out, name), path.join(target, name));
+  fs.renameSync(path.join(out, 'sitemap.xml'), path.join(target, 'sitemap-landings.xml'));
+  fs.renameSync(path.join(out, 'llms.txt'), path.join(target, 'llms.txt'));
+  for (const f of ['index.html', 'robots.txt', 'favicon.ico']) fs.rmSync(path.join(out, f), { force: true });
+}
 console.log(`Generated ${courses.length} course pages and index at ${out} (${inlineScriptHashes.size} hashes CSP, dominio ${SITE})`);

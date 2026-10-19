@@ -18,6 +18,10 @@ Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>
 
 `assets/media/` es el origen de las imágenes y el generador la copia a `dist/`. No la borres: `npm run build` limpia `dist/` en cada compilación.
 
+## Publicación en el dominio de la tienda
+
+Las landings se compilan por defecto en **modo tienda**: `dist/ncacademia/cursos/<curso>/index.html` y `dist/ncacademia/cursos/assets/...`, con rutas absolutas, canonical `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (sin barra final) y `vercel.json` con `trailingSlash: false`. Así la tienda (Next.js) puede reenviar esas rutas con un rewrite y el botón de compra funciona directo en su dominio. **La guía para el equipo de la tienda, con el código del rewrite y la lista de verificación, está en [PUBLICAR-EN-TIENDA.md](PUBLICAR-EN-TIENDA.md).** Para generar la versión autónoma (catálogo en la raíz y rutas relativas): `PUBLISH_BASE="" npm run build` (en Git Bash de Windows, anteponer `MSYS_NO_PATHCONV=1` si se pasa una ruta). Si el sitio se publica en otro dominio, definir también `SITE_URL`.
+
 ## Embudo de ventas y precios
 
 Cada landing es una página de venta: precio en COP y USD en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.

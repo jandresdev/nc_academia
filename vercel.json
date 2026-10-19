@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "trailingSlash": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -36,7 +36,7 @@
       ]
     },
     {
-      "source": "/assets/fonts/(.*)",
+      "source": "/ncacademia/cursos/assets/fonts/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -49,7 +49,7 @@
       ]
     },
     {
-      "source": "/assets/(media|brand)/(.*)",
+      "source": "/ncacademia/cursos/assets/(media|brand)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -62,7 +62,7 @@
       ]
     },
     {
-      "source": "/assets/og/(.*)",
+      "source": "/ncacademia/cursos/assets/og/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "source": "/(favicon.ico|assets/site.css|assets/site.js|assets/config.js)",
+      "source": "/ncacademia/cursos/(favicon.ico|assets/site.css|assets/site.js|assets/config.js)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -80,7 +80,7 @@
       ]
     },
     {
-      "source": "/(robots.txt|sitemap.xml|llms.txt)",
+      "source": "/ncacademia/cursos/(sitemap-landings.xml|llms.txt)",
       "headers": [
         {
           "key": "Cache-Control",

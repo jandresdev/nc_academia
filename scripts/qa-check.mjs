@@ -7,7 +7,13 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
-const pages = ['index.html', ...fs.readdirSync(dist).filter(d => fs.existsSync(path.join(dist, d, 'index.html'))).map(d => `${d}/index.html`)];
+// Busca todas las páginas (index.html) de dist/, también bajo la ruta publicada en el modo tienda (dist/ncacademia/cursos/<curso>/).
+const findPages = dir => fs.readdirSync(path.join(dist, dir), { withFileTypes: true }).flatMap(e => {
+  const rel = dir === '.' ? e.name : `${dir}/${e.name}`;
+  if (e.isDirectory()) return e.name === 'assets' ? [] : findPages(rel);
+  return e.name === 'index.html' ? [rel] : [];
+});
+const pages = findPages('.');
 const errors = [];
 const warns = [];
 const rows = [];
@@ -70,6 +76,12 @@ for (const page of pages) {
       if (/target="_blank"/.test(tag) && !/rel="[^"]*noopener/.test(tag)) err(page, `enlace externo con _blank sin noopener: ${href}`);
       continue;
     }
+    if (href.startsWith('/')) { // ruta absoluta (modo tienda): debe existir en dist/ o ser una página de la propia tienda
+      const clean = href.split('#')[0].split('?')[0];
+      if (exists(clean.replace(/^\//, ''))) continue;
+      if (/^\/ncacademia(\/cursos)?$/.test(clean)) continue;
+      err(page, `enlace roto ${href}`); continue;
+    }
     if (href.startsWith('#')) { if (href.length > 1 && !idSet.has(href.slice(1))) err(page, `ancla inexistente ${href}`); continue; }
     const [pathPart, frag] = href.split('#');
     const target = path.normalize(path.join(dir === '.' ? '' : dir, pathPart || '.'));
@@ -88,7 +100,7 @@ for (const page of pages) {
     if (!/\swidth=/.test(tag) || !/\sheight=/.test(tag)) warn(page, `img sin width/height (riesgo de CLS): ${tag.slice(0, 80)}`);
     const src = (tag.match(/\ssrc="([^"]*)"/) || [])[1];
     if (src && !src.startsWith('data:') && !/^https?:/.test(src)) {
-      const rel = path.normalize(path.join(dir === '.' ? '' : dir, src));
+      const rel = src.startsWith('/') ? src.slice(1) : path.normalize(path.join(dir === '.' ? '' : dir, src));
       if (!fs.existsSync(path.join(dist, rel))) err(page, `imagen inexistente ${src}`);
       else { const s = fs.statSync(path.join(dist, rel)).size; if (s > 200 * 1024) warn(page, `imagen de ${kb(s)} KB: ${src}`); }
     }
@@ -106,10 +118,12 @@ for (const page of pages) {
 }
 
 // robots y sitemap
+// En el modo tienda no hay robots.txt propio (lo tiene la tienda) y el sitemap se llama sitemap-landings.xml bajo la ruta publicada.
+const sitemapPath = ['sitemap.xml', ...pages.map(p => path.posix.join(path.posix.dirname(path.posix.dirname(p)), 'sitemap-landings.xml'))].find(p => fs.existsSync(path.join(dist, p)));
 const robots = fs.existsSync(path.join(dist, 'robots.txt')) ? fs.readFileSync(path.join(dist, 'robots.txt'), 'utf8') : '';
-const sitemap = fs.existsSync(path.join(dist, 'sitemap.xml')) ? fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8') : '';
-if (!robots) err('robots.txt', 'no existe');
-if (!sitemap) err('sitemap.xml', 'no existe');
+const sitemap = sitemapPath ? fs.readFileSync(path.join(dist, sitemapPath), 'utf8') : '';
+if (!robots && sitemapPath === 'sitemap.xml') err('robots.txt', 'no existe');
+if (!sitemap) err('sitemap', 'no existe');
 const smUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 const canon = pages.map(p => fs.readFileSync(path.join(dist, p), 'utf8').match(/<link rel="canonical" href="([^"]*)"/)?.[1]).filter(Boolean);
 for (const c of canon) if (!smUrls.includes(c)) warn('sitemap.xml', `falta la URL canónica ${c}`);
