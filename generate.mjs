@@ -382,6 +382,12 @@ if (PUBLISH_BASE) {
     for (const o of courses) html = html.replaceAll(`href="../${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
     fs.writeFileSync(f, html);
   }
+  // La raíz del despliegue conserva el catálogo como página de vista previa (la tienda no lo reenvía): rutas absolutas y sin indexar.
+  const fi = path.join(out, 'index.html');
+  let idx = fs.readFileSync(fi, 'utf8').replace(/(?<![\w/.\-])assets\//g, `${PUBLISH_BASE}/assets/`)
+    .replace(/content="index,follow[^"]*"/, 'content="noindex,follow"');
+  for (const o of courses) idx = idx.replaceAll(`href="${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
+  fs.writeFileSync(fi, idx);
 }
 
 // ---- Indexación: sitemap, robots y llms.txt ----
@@ -423,6 +429,7 @@ if (PUBLISH_BASE) {
   for (const name of [...courses.map(c => c.slug), 'assets']) fs.renameSync(path.join(out, name), path.join(target, name));
   fs.renameSync(path.join(out, 'sitemap.xml'), path.join(target, 'sitemap-landings.xml'));
   fs.renameSync(path.join(out, 'llms.txt'), path.join(target, 'llms.txt'));
-  for (const f of ['index.html', 'robots.txt', 'favicon.ico']) fs.rmSync(path.join(out, f), { force: true });
+  // El dominio de este despliegue es de vista previa: no debe indexarse (las URL públicas son las de la tienda, con su propio robots.txt).
+  fs.writeFileSync(path.join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 }
 console.log(`Generated ${courses.length} course pages and index at ${out} (${inlineScriptHashes.size} hashes CSP, dominio ${SITE})`);

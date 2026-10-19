@@ -125,7 +125,8 @@ const sitemap = sitemapPath ? fs.readFileSync(path.join(dist, sitemapPath), 'utf
 if (!robots && sitemapPath === 'sitemap.xml') err('robots.txt', 'no existe');
 if (!sitemap) err('sitemap', 'no existe');
 const smUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-const canon = pages.map(p => fs.readFileSync(path.join(dist, p), 'utf8').match(/<link rel="canonical" href="([^"]*)"/)?.[1]).filter(Boolean);
+// Las páginas con noindex (vista previa del catálogo en el modo tienda) no entran en el sitemap ni cuentan como canónicas.
+const canon = pages.map(p => { const h = fs.readFileSync(path.join(dist, p), 'utf8'); return /name="robots" content="noindex/.test(h) ? null : h.match(/<link rel="canonical" href="([^"]*)"/)?.[1]; }).filter(Boolean);
 for (const c of canon) if (!smUrls.includes(c)) warn('sitemap.xml', `falta la URL canónica ${c}`);
 const hosts = new Set([...smUrls, ...canon].map(u => new URL(u).host));
 if (hosts.size > 1) err('sitemap.xml', `mezcla de dominios: ${[...hosts].join(', ')}`);
