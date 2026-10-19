@@ -172,7 +172,12 @@ for (const c of courses) { const p = shop(c); if (p && p.hoursLabel) c.duration 
 const fmtCOP = n => `COP ${n.toLocaleString('es-CO')}`;
 const fmtUSD = n => `USD ${n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 const STORE = 'https://www.negocioscreativos.net';
-const buyHref = c => `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`;
+// Enlace del botón fuera del dominio de la tienda. Si la tienda habilita un enlace directo por curso, definir BUY_URL_TEMPLATE al compilar
+// (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=COP"; admite {id} y {slug}). Mientras no exista,
+// se abre la página de cursos de la tienda con parámetros de seguimiento.
+const buyHref = c => process.env.BUY_URL_TEMPLATE
+  ? process.env.BUY_URL_TEMPLATE.replaceAll('{id}', shop(c).productId).replaceAll('{slug}', c.slug)
+  : `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`;
 const buy = (c, placement, label='Inscribirme ahora') => { const p = shop(c); const product = {id:p.productId,name:p.title,price:p.priceCOP,image:p.imageUrl,description:p.description};
   return `<a class="button button--red buy-cta" href="${buyHref(c)}" data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-product="${esc(JSON.stringify(product))}">${label} <span aria-hidden="true">↗</span></a>`; };
 const advisorMsg = c => c ? `Estoy interesad@ en curso personalizado de ${c.name}.` : 'Quiero más información de la academia y sus cursos.';

@@ -96,8 +96,9 @@
         saved.state.cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image, description: product.description, type: 'course' });
       }
       localStorage.setItem('shopping-cart', JSON.stringify(saved));
-    } catch (e) { /* si el almacenamiento falla, el carrito se abre igual y la persona elige el curso allí */ }
-    window.location.href = '/cart';
+      localStorage.setItem('currency-storage', JSON.stringify({ state: { currency: 'COP' }, version: 0 })); // la landing muestra pesos; la persona aún puede cambiarlos
+    } catch (e) { /* si el almacenamiento falla, el pago se abre igual y la persona elige el curso allí */ }
+    window.location.href = '/checkout'; // directo al pago: datos del cliente, método de pago y enlace de pago, sin pasar por el carrito
   }));
 
   // Formulario de captación: valida, arma el mensaje y abre WhatsApp o correo para que la persona lo revise y lo envíe.
