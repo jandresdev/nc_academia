@@ -378,9 +378,9 @@ if (PUBLISH_BASE) {
     const f = path.join(out, c.slug, 'index.html');
     let html = fs.readFileSync(f, 'utf8');
     html = html.replaceAll('../assets/', `${PUBLISH_BASE}/assets/`)
-      .replaceAll('"../index.html#programas"', `"${PUBLISH_BASE}#cursos"`)
-      .replaceAll('"../index.html#metodo"', '"/ncacademia"')
-      .replaceAll('"../index.html"', '"/ncacademia"');
+      .replaceAll('"../index.html#programas"', `"${STORE}${PUBLISH_BASE}#cursos"`)
+      .replaceAll('"../index.html#metodo"', `"${STORE}/ncacademia"`)
+      .replaceAll('"../index.html"', `"${STORE}/ncacademia"`);
     for (const o of courses) html = html.replaceAll(`href="../${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
     fs.writeFileSync(f, html);
   }
