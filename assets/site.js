@@ -84,7 +84,7 @@
   document.querySelectorAll('.buy-cta').forEach(link => link.addEventListener('click', event => {
     let product = {};
     try { product = JSON.parse(link.dataset.product || '{}'); } catch (e) { product = {}; }
-    emit('buy_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'unknown', price: product.price, currency: 'COP', page_path: location.pathname });
+    emit('buy_click', { course_id: link.dataset.course || 'unknown', placement: link.dataset.placement || 'unknown', price: product.price, currency: 'USD', page_path: location.pathname });
     const sameStore = /(^|\.)negocioscreativos\.net$/.test(location.hostname);
     if (link.dataset.direct || !sameStore || !product.id) return; // navegación normal al enlace
     event.preventDefault();
@@ -96,7 +96,7 @@
         saved.state.cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image, description: product.description, type: 'course' });
       }
       localStorage.setItem('shopping-cart', JSON.stringify(saved));
-      localStorage.setItem('currency-storage', JSON.stringify({ state: { currency: 'COP' }, version: 0 })); // la landing muestra pesos; la persona aún puede cambiarlos
+      localStorage.setItem('currency-storage', JSON.stringify({ state: { currency: 'USD' }, version: 0 })); // la landing muestra dólares
     } catch (e) { /* si el almacenamiento falla, el pago se abre igual y la persona elige el curso allí */ }
     window.location.href = '/cart'; // carrito de la tienda con el curso agregado y el botón "Finalizar Compra" (su checkout guarda los datos del cliente que luego usa la confirmación)
   }));

@@ -176,11 +176,10 @@ const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
 const commerceFile = JSON.parse(fs.readFileSync(path.join(root,'assets','commerce.json'),'utf8'));
 const shop = c => commerceFile.products[c.slug];
 for (const c of courses) { const p = shop(c); if (p && p.hoursLabel) c.duration = p.hoursLabel; } // la página de venta manda en horas
-const fmtCOP = n => `COP ${n.toLocaleString('es-CO')}`;
 const fmtUSD = n => `USD ${n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 const STORE = 'https://www.negocioscreativos.net';
 // Enlace del botón fuera del dominio de la tienda. Si la tienda habilita un enlace directo por curso, definir BUY_URL_TEMPLATE al compilar
-// (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=COP"; admite {id} y {slug}). Mientras no exista,
+// (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=USD"; admite {id} y {slug}). Mientras no exista,
 // se abre la página de cursos de la tienda con parámetros de seguimiento.
 // Enlace de pago directo por curso (assets/payment-links.json, por ejemplo un enlace de Bold): si está lleno, manda sobre todo lo demás.
 const payLinks = JSON.parse(fs.readFileSync(path.join(root,'assets','payment-links.json'),'utf8'));
@@ -188,7 +187,7 @@ const directLink = c => /^https:\/\//.test(payLinks[c.slug] || '') ? payLinks[c.
 const buyHref = c => directLink(c) || (process.env.BUY_URL_TEMPLATE
   ? process.env.BUY_URL_TEMPLATE.replaceAll('{id}', shop(c).productId).replaceAll('{slug}', c.slug)
   : `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`);
-const buy = (c, placement, label='Inscribirme ahora') => { const p = shop(c); const product = {id:p.productId,name:p.title,price:p.priceCOP,image:p.imageUrl,description:p.description};
+const buy = (c, placement, label='Inscribirme ahora') => { const p = shop(c); const product = {id:p.productId,name:p.title,price:p.priceUSD,image:p.imageUrl,description:p.description};
   return `<a class="button button--red buy-cta" href="${buyHref(c)}"${directLink(c) ? ' data-direct="1" target="_blank" rel="noopener noreferrer"' : ''} data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-product="${esc(JSON.stringify(product))}">${label} <span aria-hidden="true">↗</span></a>`; };
 const advisorMsg = c => c ? `Estoy interesad@ en curso personalizado de ${c.name}.` : 'Quiero más información de la academia y sus cursos.';
 const advisor = (c, placement) => `<a class="button button--ghost wa-advisor" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(advisorMsg(c))}" target="_blank" rel="noopener noreferrer" data-course="${esc(c?c.slug:'orientacion')}" data-placement="${esc(placement)}">Hablar con un asesor</a>`;
@@ -250,26 +249,26 @@ const certFaq = ['¿Qué certificado entrega el curso?','Se presenta como curso 
 const indexFaqs = [
   ['¿Necesito conocimientos técnicos?','Varios cursos están diseñados para aplicar IA a roles de negocio sin aprender programación. Revisa la página del curso elegido y consúltanos si tienes dudas.'],
   ['¿Los cursos son para personas o empresas?','Hay contenidos para profesionales y opciones de capacitación para equipos. La disponibilidad, el tamaño de grupo y la adaptación se confirman según el programa.'],
-  ['¿Cuánto cuestan y cómo me inscribo?','Cada curso muestra su precio en pesos colombianos y en dólares. Pulsa «Inscribirme ahora», elige la moneda en el carrito y finaliza la compra en línea. Las fechas de cada grupo se confirman por cohorte.'],
+  ['¿Cuánto cuestan y cómo me inscribo?','Cada curso muestra su precio en dólares (USD). Pulsa «Inscribirme ahora» y finaliza el pago en línea. Las fechas de cada grupo se confirman por cohorte.'],
   ['¿Entregan certificado?','Algunos programas se presentan como cursos certificados. El emisor y los requisitos se confirman para cada curso.']
 ];
 
 function page(c, index){
   const canonical = `${SITE}/${c.slug}${SLASH}`;
   const p = shop(c);
-  const price = fmtCOP(p.priceCOP), priceUSD = fmtUSD(p.priceUSD);
-  const howFaq = ['¿Cómo me inscribo y pago?','Pulsa «Inscribirme ahora»: el curso se agrega al carrito de Negocios Creativos, eliges la moneda (pesos colombianos o dólares) y finalizas la compra en línea. Si prefieres, un asesor te acompaña por WhatsApp.'];
-  const priceFaq = [`¿Cuánto cuesta ${c.name}?`,`La inversión es ${price} (${priceUSD}). Se paga en línea y la moneda se elige en el carrito.`];
+  const price = fmtUSD(p.priceUSD);
+  const howFaq = ['¿Cómo me inscribo y pago?','Pulsa «Inscribirme ahora»: vas directo al pago seguro del curso y lo finalizas en línea. Si prefieres, un asesor te acompaña por WhatsApp.'];
+  const priceFaq = [`¿Cuánto cuesta ${c.name}?`,`La inversión es ${price}. Se paga en línea.`];
   const faqs = [priceFaq, howFaq, ...c.faqs.filter(f => !/inversi[oó]n|cu[aá]nto cuesta/i.test(f[0]))];
   const schema = {"@context":"https://schema.org","@graph":[orgNode,
     {"@type":"Course","@id":`${canonical}#course`,name:c.name,description:c.short,url:canonical,inLanguage:"es",provider:{"@id":ORG_ID},image:`${SITE}/assets/og/${c.slug}.jpg`,teaches:c.outcome,audience:{"@type":"Audience",audienceType:c.audience},
-      offers:{"@type":"Offer",price:p.priceCOP,priceCurrency:"COP",category:"Paid",availability:"https://schema.org/InStock",url:canonical},
+      offers:{"@type":"Offer",price:p.priceUSD,priceCurrency:"USD",category:"Paid",availability:"https://schema.org/InStock",url:canonical},
       hasCourseInstance:{"@type":"CourseInstance",courseMode:"online",courseWorkload:isoHours(c.duration)}},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Cursos de IA",item:ROOT_URL},{"@type":"ListItem",position:2,name:c.name,item:canonical}]},
     faqNode([...faqs,certFaq])]};
   const related = Array.from({length:3},(_,j)=>courses[(index+j+1)%courses.length]);
   const facts = [
-    ['Inversión', `${price} · ${priceUSD}`, 'fact--price'],
+    ['Inversión', price, 'fact--price'],
     ['Duración', c.duration],
     ['Modalidad', 'Online'],
     ['Cupo', p.studentsLabel],
@@ -280,9 +279,9 @@ function page(c, index){
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 ${nav(c,false)}
 <main id="contenido">
-<section class="hero"><img class="hero-media" src="${media(c)}" ${imgSet(c)} sizes="100vw" width="1344" height="768" alt="${esc(`Profesionales aplicando inteligencia artificial en ${c.category.toLowerCase()}`)}" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>${esc(c.name)}</strong></p><h1 style="--i:1">${emph(c.title)}</h1><p class="hero-lede" style="--i:2">${esc(c.short)}</p><p class="hero-price" style="--i:3"><b>${price}</b><span>${priceUSD} · pago en línea</span></p><div class="hero-actions" style="--i:4">${buy(c,'hero')}<a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">${esc(cue[c.slug])}</p><ul class="fact-list"><li><span>Duración</span><b>${esc(c.duration)}</b></li><li><span>Modalidad</span><b>Online</b></li><li><span>Cupo</span><b>${esc(p.studentsLabel)}</b></li></ul><p class="fact-for">Para ${esc(lower(c.audience))}</p></aside></div></section>
+<section class="hero"><img class="hero-media" src="${media(c)}" ${imgSet(c)} sizes="100vw" width="1344" height="768" alt="${esc(`Profesionales aplicando inteligencia artificial en ${c.category.toLowerCase()}`)}" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>${esc(c.name)}</strong></p><h1 style="--i:1">${emph(c.title)}</h1><p class="hero-lede" style="--i:2">${esc(c.short)}</p><p class="hero-price" style="--i:3"><b>${price}</b><span>Pago en línea</span></p><div class="hero-actions" style="--i:4">${buy(c,'hero')}<a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">${esc(cue[c.slug])}</p><ul class="fact-list"><li><span>Duración</span><b>${esc(c.duration)}</b></li><li><span>Modalidad</span><b>Online</b></li><li><span>Cupo</span><b>${esc(p.studentsLabel)}</b></li></ul><p class="fact-for">Para ${esc(lower(c.audience))}</p></aside></div></section>
 
-<section class="section reto"><h2 class="sec-title" data-r>${esc(editorial[c.slug][0])}</h2><div class="bento"><article class="glass tile tile-pain" data-r><h3>El reto</h3><p>${esc(c.pain)}</p></article><article class="glass tile tile-outcome" data-r style="--d:1"><h3>Lo que te llevas</h3><p class="lead">${esc(c.outcome)}</p><p class="sub">${esc(editorial[c.slug][1])}</p></article><article class="glass tile tile-cta" data-r style="--d:2"><div><p class="tile-price"><b>${price}</b><small>${priceUSD}</small></p><p>Asegura tu cupo y empieza a aplicar la IA en tu trabajo.</p></div>${buy(c,'reto')}</article></div></section>
+<section class="section reto"><h2 class="sec-title" data-r>${esc(editorial[c.slug][0])}</h2><div class="bento"><article class="glass tile tile-pain" data-r><h3>El reto</h3><p>${esc(c.pain)}</p></article><article class="glass tile tile-outcome" data-r style="--d:1"><h3>Lo que te llevas</h3><p class="lead">${esc(c.outcome)}</p><p class="sub">${esc(editorial[c.slug][1])}</p></article><article class="glass tile tile-cta" data-r style="--d:2"><div><p class="tile-price"><b>${price}</b></p><p>Asegura tu cupo y empieza a aplicar la IA en tu trabajo.</p></div>${buy(c,'reto')}</article></div></section>
 
 <section class="section program" id="programa"><div class="program-side" data-r><p class="eyebrow">El recorrido</p><h2>Un programa que va <em>de lo concreto</em> a lo aplicable.</h2><p>Un recorrido práctico, paso a paso, con ejercicios sobre casos de tu trabajo.</p><div class="glass tools"><b>Herramientas del temario</b>${esc(c.tools)}</div></div><ol class="mods">${c.modules.map((m,i)=>`<li class="glass" data-r style="--d:${i%4}"><span class="no">${String(i+1).padStart(2,'0')}</span><h3>${esc(m[0])}</h3><span class="time">${esc(m[1])}</span></li>`).join('')}</ol></section>
 
@@ -294,9 +293,9 @@ ${nav(c,false)}
 
 <section class="section"><div class="faq-wrap"><div data-r><h2>Resuelve tus dudas <em>antes de inscribirte.</em></h2><p class="muted">Si algo no queda claro, un asesor te responde por WhatsApp.</p>${advisor(c,'faq')}</div><div class="faq-list">${faqs.map((f,i)=>`<details class="faq-item glass" data-r style="--d:${i%4}" ${i===0?'open':''}><summary>${esc(f[0])}<span aria-hidden="true">+</span></summary><p>${esc(f[1])}</p></details>`).join('')}<details class="faq-item glass" data-r><summary>${esc(certFaq[0])}<span aria-hidden="true">+</span></summary><p>${esc(certFaq[1])}</p></details></div></div></section>
 
-<section class="section"><div class="related-head"><h2 data-r>Tu próximo paso puede ser <em>otro.</em></h2><a href="../index.html#programas" class="text-link">Ver todos los cursos ↗</a></div><div class="track">${related.map(r=>`<a class="rel glass" href="../${r.slug}/"><img ${cardSet(r)} sizes="(max-width: 640px) 78vw, 360px" width="900" height="900" loading="lazy" alt=""><div class="rel-body"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><p>${esc(r.short)}</p><span class="rel-price">${fmtCOP(shop(r).priceCOP)}</span></div></a>`).join('')}</div></section>
+<section class="section"><div class="related-head"><h2 data-r>Tu próximo paso puede ser <em>otro.</em></h2><a href="../index.html#programas" class="text-link">Ver todos los cursos ↗</a></div><div class="track">${related.map(r=>`<a class="rel glass" href="../${r.slug}/"><img ${cardSet(r)} sizes="(max-width: 640px) 78vw, 360px" width="900" height="900" loading="lazy" alt=""><div class="rel-body"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><p>${esc(r.short)}</p><span class="rel-price">${fmtUSD(shop(r).priceUSD)}</span></div></a>`).join('')}</div></section>
 
-<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Asegura tu cupo en <em>${esc(c.name)}.</em></h2><p class="final-price" data-r><b>${price}</b><span>${priceUSD}</span></p><p data-r>Inscríbete en línea: el curso se agrega al carrito, eliges la moneda y finalizas la compra.</p><div class="final-cta" data-r>${buy(c,'final')}</div><div class="assure" data-r><span class="chip">Pago en línea</span><span class="chip">Pesos o dólares</span><span class="chip">${esc(p.studentsLabel)}</span></div>${guiaFigure('../')}</div>${leadForm(c)}</div></section>
+<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Asegura tu cupo en <em>${esc(c.name)}.</em></h2><p class="final-price" data-r><b>${price}</b><span>Pago en línea</span></p><p data-r>Inscríbete en línea y finaliza tu pago en pocos pasos.</p><div class="final-cta" data-r>${buy(c,'final')}</div><div class="assure" data-r><span class="chip">Pago en línea</span><span class="chip">Precio en dólares</span><span class="chip">${esc(p.studentsLabel)}</span></div>${guiaFigure('../')}</div>${leadForm(c)}</div></section>
 </main>
 ${footer(false)}
 ${floatWa(c)}
@@ -316,7 +315,7 @@ ${nav(null,true)}
 <main id="contenido">
 <section class="hero hero-index hero-guia"><img class="hero-media" src="assets/brand/guia/guia-portada-derecha.webp" srcset="assets/brand/guia/guia-portada-derecha-720.webp 720w, assets/brand/guia/guia-portada-derecha.webp 1000w" sizes="(max-width: 960px) 100vw, 68vw" width="1000" height="1125" alt="GUIA, el personaje de NC AcademIA, sentado con su computador entre luces rojas" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="eyebrow" style="--i:0"><span class="nc-name">NC AcademIA</span> · Colombia</p><h1 style="--i:1">La IA se aprende <em>aplicándola.</em></h1><p class="hero-lede" style="--i:2">Formación práctica en IA para tu profesión y tu empresa. Diez rutas con casos reales y criterio humano.</p><div class="hero-actions" style="--i:3"><a href="#programas" class="button button--red">Explorar los cursos <span aria-hidden="true">↓</span></a><a href="#metodo" class="text-link">Conoce el método</a></div></div></div></section>
 
-<section class="section" id="programas"><div class="cat-head"><h2 data-r>¿Qué parte de tu trabajo quieres <em>transformar?</em></h2><p class="muted" data-r>Elige por tu rol o necesidad y entra a la ruta pensada para ti.</p></div><div class="cat-grid">${courses.map((c,i)=>`<a href="${c.slug}/" class="cc glass" data-theme="${esc(c.slug)}" data-r style="--d:${i%3}"><div class="cc-visual"><img ${cardSet(c,'')} sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" width="900" height="900" loading="${i<2?'eager':'lazy'}" alt="Curso ${esc(c.name)}"><span class="cc-no">${c.number}</span></div><div class="cc-body"><div class="cc-meta"><span>${esc(c.category)}</span><span>${esc(c.duration)}</span></div><h3>${esc(c.name)}</h3><p>${esc(c.short)}</p><p class="cc-price"><b>${fmtCOP(shop(c).priceCOP)}</b><small>${fmtUSD(shop(c).priceUSD)}</small></p><div class="cc-go"><span>${esc(cue[c.slug])}</span><b aria-hidden="true">↗</b></div></div></a>`).join('')}</div></section>
+<section class="section" id="programas"><div class="cat-head"><h2 data-r>¿Qué parte de tu trabajo quieres <em>transformar?</em></h2><p class="muted" data-r>Elige por tu rol o necesidad y entra a la ruta pensada para ti.</p></div><div class="cat-grid">${courses.map((c,i)=>`<a href="${c.slug}/" class="cc glass" data-theme="${esc(c.slug)}" data-r style="--d:${i%3}"><div class="cc-visual"><img ${cardSet(c,'')} sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw" width="900" height="900" loading="${i<2?'eager':'lazy'}" alt="Curso ${esc(c.name)}"><span class="cc-no">${c.number}</span></div><div class="cc-body"><div class="cc-meta"><span>${esc(c.category)}</span><span>${esc(c.duration)}</span></div><h3>${esc(c.name)}</h3><p>${esc(c.short)}</p><p class="cc-price"><b>${fmtUSD(shop(c).priceUSD)}</b></p><div class="cc-go"><span>${esc(cue[c.slug])}</span><b aria-hidden="true">↗</b></div></div></a>`).join('')}</div></section>
 
 <section class="section" id="metodo"><h2 class="sec-title" data-r>De la pregunta <em>a la práctica.</em></h2><div class="method"><article class="glass step" data-r><small>ENTENDER</small><h3>Ubica el reto</h3><p>Parte de una tarea, decisión o proceso de tu realidad.</p></article><article class="glass step" data-r style="--d:1"><small>EXPLORAR</small><h3>Prueba con criterio</h3><p>Elige herramientas y aprende a revisar sus resultados.</p></article><article class="glass step" data-r style="--d:2"><small>APLICAR</small><h3>Conecta con el trabajo</h3><p>Desarrolla ejercicios y entregables alrededor del caso.</p></article><article class="glass step" data-r style="--d:3"><small>CONTINUAR</small><h3>Define el siguiente paso</h3><p>Identifica cómo seguir practicando en tu rol o equipo.</p></article></div></section>
 

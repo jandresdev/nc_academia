@@ -24,7 +24,7 @@ Las landings se compilan por defecto en **modo tienda**: `dist/ncacademia/cursos
 
 ## Embudo de ventas y precios
 
-Cada landing es una página de venta: precio en COP y USD en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.
+Cada landing es una página de venta: precio en dólares (USD) en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.
 
 - **La tienda no tiene enlaces de pago por curso.** El enlace de pago se genera al final del checkout: la página `/checkout` de la tienda toma el carrito del navegador (`localStorage`, clave `shopping-cart`), pide nombre, correo y teléfono, el método de pago, y llama a su servidor (`/api/pyments/create-payment-link`) que devuelve el enlace de pago y redirige. Ese servidor no acepta llamadas desde otros dominios (sin CORS).
 - **Cómo lo resuelven las landings:** el botón de compra lleva el id de producto, el precio y la imagen del curso (`data-product`). Si la landing se sirve desde `negocioscreativos.net` (por ejemplo `/ncacademia/cursos/<curso>/`), el clic agrega ese curso al carrito, pone la moneda en COP y abre **el carrito de la tienda** (`/cart`) con ese curso, listo para pulsar Finalizar Compra (validado contra la tienda real). Desde otro dominio (Vercel, pruebas) no se puede escribir en el almacenamiento de otro sitio, y el botón abre la página de cursos de la tienda con parámetros UTM.
