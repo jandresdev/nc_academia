@@ -178,6 +178,8 @@ const shop = c => commerceFile.products[c.slug];
 for (const c of courses) { const p = shop(c); if (p && p.hoursLabel) c.duration = p.hoursLabel; } // la página de venta manda en horas
 const fmtUSD = n => `USD ${n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
 const STORE = 'https://www.negocioscreativos.net';
+// Destino de "Programas" y "Ver todos los cursos": por ahora el catálogo de este mismo despliegue; cuando la tienda enlace las landings, cambiarlo al catálogo de la tienda.
+const CATALOG_URL = process.env.CATALOG_URL || 'https://ncacademia.vercel.app/';
 // Enlace del botón fuera del dominio de la tienda. Si la tienda habilita un enlace directo por curso, definir BUY_URL_TEMPLATE al compilar
 // (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=USD"; admite {id} y {slug}). Mientras no exista,
 // se abre la página de cursos de la tienda con parámetros de seguimiento.
@@ -378,7 +380,7 @@ if (PUBLISH_BASE) {
     const f = path.join(out, c.slug, 'index.html');
     let html = fs.readFileSync(f, 'utf8');
     html = html.replaceAll('../assets/', `${PUBLISH_BASE}/assets/`)
-      .replaceAll('"../index.html#programas"', `"${STORE}${PUBLISH_BASE}#cursos"`)
+      .replaceAll('"../index.html#programas"', `"${CATALOG_URL}"`)
       .replaceAll('"../index.html#metodo"', `"${STORE}/ncacademia"`)
       .replaceAll('"../index.html"', `"${STORE}/ncacademia"`);
     for (const o of courses) html = html.replaceAll(`href="../${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
