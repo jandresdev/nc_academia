@@ -381,8 +381,8 @@ if (PUBLISH_BASE) {
     let html = fs.readFileSync(f, 'utf8');
     html = html.replaceAll('../assets/', `${PUBLISH_BASE}/assets/`)
       .replaceAll('"../index.html#programas"', `"${CATALOG_URL}"`)
-      .replaceAll('"../index.html#metodo"', `"${STORE}/ncacademia"`)
-      .replaceAll('"../index.html"', `"${STORE}/ncacademia"`);
+      .replaceAll('"../index.html#metodo"', `"${CATALOG_URL}"`)
+      .replaceAll('"../index.html"', `"${CATALOG_URL}"`);
     for (const o of courses) html = html.replaceAll(`href="../${o.slug}/"`, `href="${PUBLISH_BASE}/${o.slug}"`);
     fs.writeFileSync(f, html);
   }
