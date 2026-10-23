@@ -3,15 +3,15 @@
 Uso (desde web-landings/):  python scripts/fetch-products.py
 
 Fuente: https://www.negocioscreativos.net/ncacademia/cursos (página pública de Negocios Creativos).
-Esa página no tiene enlaces de pago por curso: "Inscribirme ahora" agrega el curso a un carrito del navegador
-(localStorage, clave "shopping-cart") y abre /cart. Por eso se guardan aquí el id de producto, el precio y la imagen
-que usa ese carrito, para que las landings puedan agregar el mismo curso al carrito.
+Los datos de esta página sirven para la descripción, horas, cupo e imágenes de las landings. Los precios USD
+publicados y sus enlaces se toman de assets/payment-links.json (checkouts Hotmart recibidos del cliente).
+El campo priceUSD de commerce.json es una conversión histórica del precio de la tienda y no se muestra en las landings.
 
 Escribe:
   assets/commerce.json            datos por curso (id de producto, precio COP y USD, horas, cupo, descripción, imagen)
   assets/media/card-<curso>.webp  imagen de la tarjeta (900 px de ancho) y card-<curso>-480.webp (480 px)
 
-Vuelve a ejecutarlo cuando cambien precios o imágenes en la página de origen.
+Vuelve a ejecutarlo cuando cambien horas, cupos o imágenes en la página de origen. No sobrescribe payment-links.json.
 """
 import io
 import json

@@ -331,6 +331,7 @@ h1 em, h2 em { font-style: italic; color: var(--red); padding-right: .04em; }
 .hero-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 24px; }
 .hero-price b { font: 700 clamp(28px, 3.2vw, 42px)/1 var(--display); letter-spacing: -.02em; }
 .hero-price span { color: var(--ink-2); font-size: 14px; }
+.checkout-note { margin: -14px 0 22px; max-width: 480px; color: var(--ink-2); font-size: 12px; line-height: 1.45; }
 .tile-cta .tile-price { margin: 0 0 8px; color: var(--ink); max-width: none; }
 .tile-price b { display: block; font: 700 clamp(28px, 3vw, 40px)/1 var(--display); }
 .tile-price small { color: var(--ink-2); font-size: 14px; }

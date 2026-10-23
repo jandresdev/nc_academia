@@ -1,12 +1,12 @@
 {
-  "ia-facil-para-todos": "https://pay.hotmart.com/G108058178Y",
-  "marketing-total-con-ia": "https://pay.hotmart.com/S108060805H",
-  "diseno-creativo-con-ia": "https://pay.hotmart.com/W108061242W",
-  "publicidad-digital-ads": "https://pay.hotmart.com/T108061942J",
-  "ia-para-administrativos": "https://pay.hotmart.com/B108062218R",
-  "automatizacion-y-agentes-ia": "https://pay.hotmart.com/Q108062567H",
-  "ia-para-comerciales": "https://pay.hotmart.com/W108062622A",
-  "ia-para-finanzas": "https://pay.hotmart.com/O108062675R",
-  "ia-para-gerentes": "https://pay.hotmart.com/A108062828M",
-  "ia-360-para-empresas": "https://pay.hotmart.com/G108045437Q"
+  "ia-facil-para-todos": { "url": "https://pay.hotmart.com/C108128573H", "priceUSD": 395 },
+  "marketing-total-con-ia": { "url": "https://pay.hotmart.com/B108128594B", "priceUSD": 517 },
+  "diseno-creativo-con-ia": { "url": "https://pay.hotmart.com/T108128615V", "priceUSD": 517 },
+  "publicidad-digital-ads": { "url": "https://pay.hotmart.com/X108128638G", "priceUSD": 578 },
+  "ia-para-administrativos": { "url": "https://pay.hotmart.com/M108128659D", "priceUSD": 684 },
+  "automatizacion-y-agentes-ia": { "url": "https://pay.hotmart.com/D108128692T", "priceUSD": 684 },
+  "ia-para-comerciales": { "url": "https://pay.hotmart.com/D108128723O", "priceUSD": 684 },
+  "ia-para-finanzas": { "url": "https://pay.hotmart.com/N108128749B", "priceUSD": 821 },
+  "ia-para-gerentes": { "url": "https://pay.hotmart.com/G108128779M", "priceUSD": 821 },
+  "ia-360-para-empresas": { "url": "https://pay.hotmart.com/B108129220N", "priceUSD": 3000 }
 }

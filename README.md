@@ -1,12 +1,12 @@
 # Micrositio de landings NC AcademIA
 
-Micrositio estático de diez landings y un catálogo, todavía no publicado. El contenido está pre-renderizado en HTML para que sea legible sin JavaScript. Los HTML finales llevan CSS, JavaScript básico, logotipo y favicon incrustados. Las fotografías y el clip de video están en `dist/assets/media/`: para verlos al abrir los HTML locales hay que conservar esa carpeta junto a las páginas o extraer el ZIP completo.
+Micrositio estático de diez landings y un catálogo, todavía no publicado. El contenido está pre-renderizado en HTML para que sea legible sin JavaScript. Los HTML finales llevan CSS, JavaScript básico, logotipo y favicon incrustados. Las fotografías y el clip de video se copian a la carpeta `assets/media/` de cada compilación. Para recorrer las páginas desde el disco local, abrir `preview/index.html` y conservar toda la carpeta `preview/`.
 
 Cada curso tiene un hero fotográfico de ancho completo, una escena visual en “Para quién”, una franja de práctica con imagen y tarjetas fotográficas en el catálogo y los cursos relacionados. Automatización y Agentes de IA incluye un clip silencioso en la sección de público, con imagen de respaldo y respeto por la preferencia de movimiento reducido. Las escenas se generaron con Higgsfield para este proyecto y se exportaron en WebP para reducir el peso de carga.
 
 ## Compilar
 
-Desde esta carpeta, ejecutar `npm run build` con Node.js 18 o superior. La salida queda en `dist/`: un catálogo y una carpeta por URL de curso (`dist/<slug>/index.html`).
+Desde esta carpeta, ejecutar `npm run build` con Node.js 18 o superior. La salida de publicación queda en `dist/ncacademia/cursos/`. Para generar una vista local independiente con rutas relativas, ejecutar en PowerShell: `$env:PUBLISH_BASE=''; $env:NC_OUTPUT_DIR='preview'; npm run build`. Después, limpiar esas variables y volver a compilar la salida de publicación. El generador acepta `NC_OUTPUT_DIR=preview` solo para esa vista local.
 
 ## Sistema visual
 
@@ -20,18 +20,16 @@ Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>
 
 ## Publicación en el dominio de la tienda
 
-Las landings se compilan por defecto en **modo tienda**: `dist/ncacademia/cursos/<curso>/index.html` y `dist/ncacademia/cursos/assets/...`, con rutas absolutas, canonical `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (sin barra final) y `vercel.json` con `trailingSlash: false`. Así la tienda (Next.js) puede reenviar esas rutas con un rewrite y el botón de compra funciona directo en su dominio. **La guía para el equipo de la tienda, con el código del rewrite y la lista de verificación, está en [PUBLICAR-EN-TIENDA.md](PUBLICAR-EN-TIENDA.md).** La raíz del despliegue (por ejemplo `ncacademia.vercel.app/`) muestra el catálogo como **vista previa**, con `noindex` y un `robots.txt` que bloquea indexar ese dominio; las URL públicas son las de la tienda. Para generar la versión autónoma (catálogo en la raíz y rutas relativas): `PUBLISH_BASE="" npm run build` (en Git Bash de Windows, anteponer `MSYS_NO_PATHCONV=1` si se pasa una ruta). Si el sitio se publica en otro dominio, definir también `SITE_URL`.
+Las landings se compilan por defecto en **modo tienda**: `dist/ncacademia/cursos/<curso>/index.html` y `dist/ncacademia/cursos/assets/...`, con rutas absolutas, canonical `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (sin barra final) y `vercel.json` con `trailingSlash: false`. La tienda (Next.js) puede reenviar esas rutas con un rewrite. **La guía de publicación está en [PUBLICAR-EN-TIENDA.md](PUBLICAR-EN-TIENDA.md).** El botón de compra abre el checkout de Hotmart del curso desde cualquier dominio. La raíz del despliegue (por ejemplo `ncacademia.vercel.app/`) muestra el catálogo como **vista previa**, con `noindex` y un `robots.txt` que bloquea indexar ese dominio; las URL públicas son las de la tienda. Para generar la versión autónoma (catálogo en la raíz y rutas relativas): `PUBLISH_BASE="" npm run build` (en Git Bash de Windows, anteponer `MSYS_NO_PATHCONV=1` si se pasa una ruta). Si el sitio se publica en otro dominio, definir también `SITE_URL`.
 
 ## Embudo de ventas y precios
 
 Cada landing es una página de venta: precio en dólares (USD) en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.
 
-- **La tienda no tiene enlaces de pago por curso.** El enlace de pago se genera al final del checkout: la página `/checkout` de la tienda toma el carrito del navegador (`localStorage`, clave `shopping-cart`), pide nombre, correo y teléfono, el método de pago, y llama a su servidor (`/api/pyments/create-payment-link`) que devuelve el enlace de pago y redirige. Ese servidor no acepta llamadas desde otros dominios (sin CORS).
-- **Cómo lo resuelven las landings:** el botón de compra lleva el id de producto, el precio y la imagen del curso (`data-product`). Si la landing se sirve desde `negocioscreativos.net` (por ejemplo `/ncacademia/cursos/<curso>/`), el clic agrega ese curso al carrito, pone la moneda en COP y abre **el carrito de la tienda** (`/cart`) con ese curso, listo para pulsar Finalizar Compra (validado contra la tienda real). Desde otro dominio (Vercel, pruebas) no se puede escribir en el almacenamiento de otro sitio, y el botón abre la página de cursos de la tienda con parámetros UTM.
-- **Enlace directo desde cualquier dominio:** si el equipo de la tienda habilita una URL que reciba el curso (por ejemplo `/cart?add=<id>`), compilar con `BUY_URL_TEMPLATE="https://www.negocioscreativos.net/cart?add={id}" npm run build` (admite `{id}` y `{slug}`).
-- **Enlace de pago directo por curso:** si el equipo obtiene un enlace de pago por curso (por ejemplo un enlace de Bold), se pega en `assets/payment-links.json` (clave = slug del curso, debe empezar por `https://`). Cuando está lleno, ese curso lleva directo a su pago en todos los dominios y tiene prioridad sobre el carrito. Luego `npm run build`.
-- **Datos comerciales:** `assets/commerce.json` (precios, horas, cupo, descripción, id de producto) y las imágenes `assets/media/card-*.webp` se generan con `python scripts/fetch-products.py`, que lee la página pública de cursos. Vuelve a ejecutarlo cuando cambien precios o imágenes y recompila con `npm run build`. Las horas y los precios de la tienda mandan sobre los del PDF.
-- **Analítica:** el clic en compra emite `buy_click` (curso, ubicación, precio, moneda) y el de asesor `whatsapp_click`.
+- **Ofertas vigentes:** `assets/payment-links.json` guarda el enlace Hotmart y el importe USD de cada curso. Los diez enlaces y la opción USD/PayPal se verificaron el 23 de octubre de 2026 con `python scripts/audit-hotmart.py`. Si el cliente modifica un checkout, hay que actualizar ese archivo y recompilar.
+- **Moneda en checkout:** el importe publicado es el de la opción USD que devuelve Hotmart. Los medios locales pueden mostrar COP; la persona debe revisar el total final en Hotmart antes de pagar. No se calcula USD con el tipo de cambio fijo de `commerce.json`.
+- **Datos descriptivos:** `assets/commerce.json` aporta horas, cupo y otros datos del catálogo de Negocios Creativos. `scripts/fetch-products.py` puede actualizar ese archivo, pero la oferta USD de Hotmart sigue siendo la fuente de precio para las landings.
+- **Analítica:** el clic en compra emite `buy_click` (curso, ubicación, precio, moneda) y el de asesor `whatsapp_click`. La navegación a Hotmart funciona sin JavaScript.
 
 ## Configuración y CTA
 
@@ -49,4 +47,4 @@ El sitemap se debe enviar en Search Console o referenciar desde el `robots.txt` 
 
 ## Antes de publicar
 
-Confirmar inversión y unidad de cobro, fechas, modalidad/sesiones, duración de Finanzas, certificado, cupos, herramientas/licencias, docentes, teléfono y ruta de despliegue. Los metadatos `og:image` apuntan a las nuevas imágenes del curso en la URL canónica prevista; revisar esas rutas al desplegar.
+Confirmar unidad de cobro y alcance para equipos, fechas, modalidad/sesiones, condiciones del certificado, cupos, herramientas/licencias, docentes y ruta de despliegue. Los precios USD y enlaces de pago están actualizados según los checkouts recibidos el 21 de octubre y verificados el 23 de octubre de 2026. Los metadatos `og:image` apuntan a las imágenes del curso en la URL canónica prevista; revisar esas rutas al desplegar.

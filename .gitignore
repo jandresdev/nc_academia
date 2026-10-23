@@ -2,6 +2,7 @@
 .claude/
 
 node_modules/
+preview/
 *.log
 *.zip
 .DS_Store

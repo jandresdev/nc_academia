@@ -3,7 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const out = path.join(root, 'dist');
+// La vista local usa rutas relativas; la salida de publicación conserva /ncacademia/cursos.
+const out = path.join(root, process.env.NC_OUTPUT_DIR === 'preview' ? 'preview' : 'dist');
 const courses = [
   {
     slug:'ia-facil-para-todos', number:'01', name:'IA fácil para todos', tier:'Emprendedor', category:'Fundamentos', duration:'12 horas',
@@ -169,28 +170,25 @@ const media800 = (c, prefix='../') => `${prefix}assets/media/${c.slug}-800.webp`
 const imgSet = (c, prefix='../') => `srcset="${media800(c,prefix)} 800w, ${media(c,prefix)} 1344w"`;
 const lower = s => s.charAt(0).toLowerCase() + s.slice(1);
 
-// ---- Venta: datos de la tienda de Negocios Creativos (assets/commerce.json, lo genera scripts/fetch-products.py) ----
-// La tienda no tiene enlaces de pago por curso: "Inscribirme ahora" guarda el curso en el carrito del navegador (localStorage "shopping-cart")
-// y abre /cart. Por eso el botón de compra lleva los datos del producto y, si la landing se sirve desde negocioscreativos.net, lo agrega al
-// mismo carrito; desde otro dominio abre la página de cursos con parámetros de seguimiento.
+// ---- Venta: datos descriptivos de la tienda y ofertas vigentes de Hotmart ----
+// Los importes USD se leyeron de la opción USD/PayPal de los diez checkouts el 23/10/2026.
+// El precio en COP que muestra Hotmart para otros medios puede variar; no se deriva del tipo de cambio de commerce.json.
 const commerceFile = JSON.parse(fs.readFileSync(path.join(root,'assets','commerce.json'),'utf8'));
-const shop = c => commerceFile.products[c.slug];
+const payLinks = JSON.parse(fs.readFileSync(path.join(root,'assets','payment-links.json'),'utf8'));
+for (const c of courses) {
+  const offer = payLinks[c.slug];
+  if (!commerceFile.products[c.slug] || !offer || !/^https:\/\/pay\.hotmart\.com\/[A-Z0-9]+$/.test(offer.url) || !Number.isFinite(offer.priceUSD) || offer.priceUSD <= 0) {
+    throw new Error(`Falta una oferta Hotmart válida para ${c.slug}`);
+  }
+}
+const shop = c => ({...commerceFile.products[c.slug], priceUSD:payLinks[c.slug].priceUSD});
 for (const c of courses) { const p = shop(c); if (p && p.hoursLabel) c.duration = p.hoursLabel; } // la página de venta manda en horas
 const fmtUSD = n => `USD ${n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
-const STORE = 'https://www.negocioscreativos.net';
 // Destino de "Programas" y "Ver todos los cursos": por ahora el catálogo de este mismo despliegue; cuando la tienda enlace las landings, cambiarlo al catálogo de la tienda.
 const CATALOG_URL = process.env.CATALOG_URL || 'https://ncacademia.vercel.app/';
-// Enlace del botón fuera del dominio de la tienda. Si la tienda habilita un enlace directo por curso, definir BUY_URL_TEMPLATE al compilar
-// (ejemplo: BUY_URL_TEMPLATE="https://www.negocioscreativos.net/checkout?curso={id}&moneda=USD"; admite {id} y {slug}). Mientras no exista,
-// se abre la página de cursos de la tienda con parámetros de seguimiento.
-// Enlace de pago directo por curso (assets/payment-links.json, por ejemplo un enlace de Bold): si está lleno, manda sobre todo lo demás.
-const payLinks = JSON.parse(fs.readFileSync(path.join(root,'assets','payment-links.json'),'utf8'));
-const directLink = c => /^https:\/\//.test(payLinks[c.slug] || '') ? payLinks[c.slug] : '';
-const buyHref = c => directLink(c) || (process.env.BUY_URL_TEMPLATE
-  ? process.env.BUY_URL_TEMPLATE.replaceAll('{id}', shop(c).productId).replaceAll('{slug}', c.slug)
-  : `${STORE}/ncacademia/cursos?utm_source=landing-ncacademia&utm_medium=cta&utm_campaign=${c.slug}#cursos`);
-const buy = (c, placement, label='Inscribirme ahora') => { const p = shop(c); const product = {id:p.productId,name:p.title,price:p.priceUSD,image:p.imageUrl,description:p.description};
-  return `<a class="button button--red buy-cta" href="${buyHref(c)}"${directLink(c) ? ' data-direct="1" target="_blank" rel="noopener noreferrer"' : ''} data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-product="${esc(JSON.stringify(product))}">${label} <span aria-hidden="true">↗</span></a>`; };
+const directLink = c => payLinks[c.slug].url;
+const buyHref = c => directLink(c);
+const buy = (c, placement, label='Inscribirme ahora') => `<a class="button button--red buy-cta" href="${buyHref(c)}" target="_blank" rel="noopener noreferrer" data-course="${esc(c.slug)}" data-placement="${esc(placement)}" data-price="${shop(c).priceUSD}">${label} <span aria-hidden="true">↗</span></a>`;
 const advisorMsg = c => c ? `Estoy interesad@ en curso personalizado de ${c.name}.` : 'Quiero más información de la academia y sus cursos.';
 const advisor = (c, placement) => `<a class="button button--ghost wa-advisor" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(advisorMsg(c))}" target="_blank" rel="noopener noreferrer" data-course="${esc(c?c.slug:'orientacion')}" data-placement="${esc(placement)}">Hablar con un asesor</a>`;
 const cardSet = (c, prefix='../') => `src="${prefix}assets/media/card-${c.slug}-480.webp" srcset="${prefix}assets/media/card-${c.slug}-480.webp 480w, ${prefix}assets/media/card-${c.slug}.webp 900w"`;
@@ -251,7 +249,7 @@ const certFaq = ['¿Qué certificado entrega el curso?','Se presenta como curso 
 const indexFaqs = [
   ['¿Necesito conocimientos técnicos?','Varios cursos están diseñados para aplicar IA a roles de negocio sin aprender programación. Revisa la página del curso elegido y consúltanos si tienes dudas.'],
   ['¿Los cursos son para personas o empresas?','Hay contenidos para profesionales y opciones de capacitación para equipos. La disponibilidad, el tamaño de grupo y la adaptación se confirman según el programa.'],
-  ['¿Cuánto cuestan y cómo me inscribo?','Cada curso muestra su precio en dólares (USD). Pulsa «Inscribirme ahora» y finaliza el pago en línea. Las fechas de cada grupo se confirman por cohorte.'],
+  ['¿Cuánto cuestan y cómo me inscribo?','Cada curso muestra el importe en USD de su enlace de Hotmart. Pulsa «Inscribirme ahora» para abrir el pago del curso. Según el país y el medio de pago, Hotmart puede mostrar y cobrar en COP. Las fechas de cada grupo se confirman por cohorte.'],
   ['¿Entregan certificado?','Algunos programas se presentan como cursos certificados. El emisor y los requisitos se confirman para cada curso.']
 ];
 
@@ -259,12 +257,12 @@ function page(c, index){
   const canonical = `${SITE}/${c.slug}${SLASH}`;
   const p = shop(c);
   const price = fmtUSD(p.priceUSD);
-  const howFaq = ['¿Cómo me inscribo y pago?','Pulsa «Inscribirme ahora»: vas directo al pago seguro del curso y lo finalizas en línea. Si prefieres, un asesor te acompaña por WhatsApp.'];
-  const priceFaq = [`¿Cuánto cuesta ${c.name}?`,`La inversión es ${price}. Se paga en línea.`];
+  const howFaq = ['¿Cómo me inscribo y pago?','Pulsa «Inscribirme ahora» para abrir el checkout de Hotmart del curso. Allí eliges el medio de pago y verificas el total antes de finalizar. Si prefieres, un asesor te acompaña por WhatsApp.'];
+  const priceFaq = [`¿Cuánto cuesta ${c.name}?`,`El enlace de Hotmart muestra ${price} para la opción de pago en USD. Según el país y el medio de pago, el checkout puede mostrar el total en COP. Revisa el importe final antes de pagar.`];
   const faqs = [priceFaq, howFaq, ...c.faqs.filter(f => !/inversi[oó]n|cu[aá]nto cuesta/i.test(f[0]))];
   const schema = {"@context":"https://schema.org","@graph":[orgNode,
     {"@type":"Course","@id":`${canonical}#course`,name:c.name,description:c.short,url:canonical,inLanguage:"es",provider:{"@id":ORG_ID},image:`${SITE}/assets/og/${c.slug}.jpg`,teaches:c.outcome,audience:{"@type":"Audience",audienceType:c.audience},
-      offers:{"@type":"Offer",price:p.priceUSD,priceCurrency:"USD",category:"Paid",availability:"https://schema.org/InStock",url:canonical},
+      offers:{"@type":"Offer",price:p.priceUSD,priceCurrency:"USD",category:"Paid",url:directLink(c)},
       hasCourseInstance:{"@type":"CourseInstance",courseMode:"online",courseWorkload:isoHours(c.duration)}},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Cursos de IA",item:ROOT_URL},{"@type":"ListItem",position:2,name:c.name,item:canonical}]},
     faqNode([...faqs,certFaq])]};
@@ -281,7 +279,7 @@ function page(c, index){
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
 ${nav(c,false)}
 <main id="contenido">
-<section class="hero"><img class="hero-media" src="${media(c)}" ${imgSet(c)} sizes="100vw" width="1344" height="768" alt="${esc(`Profesionales aplicando inteligencia artificial en ${c.category.toLowerCase()}`)}" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>${esc(c.name)}</strong></p><h1 style="--i:1">${emph(c.title)}</h1><p class="hero-lede" style="--i:2">${esc(c.short)}</p><p class="hero-price" style="--i:3"><b>${price}</b><span>Pago en línea</span></p><div class="hero-actions" style="--i:4">${buy(c,'hero')}<a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">${esc(cue[c.slug])}</p><ul class="fact-list"><li><span>Duración</span><b>${esc(c.duration)}</b></li><li><span>Modalidad</span><b>Online</b></li><li><span>Cupo</span><b>${esc(p.studentsLabel)}</b></li></ul><p class="fact-for">Para ${esc(lower(c.audience))}</p></aside></div></section>
+<section class="hero"><img class="hero-media" src="${media(c)}" ${imgSet(c)} sizes="100vw" width="1344" height="768" alt="${esc(`Profesionales aplicando inteligencia artificial en ${c.category.toLowerCase()}`)}" fetchpriority="high"><div class="hero-shade"></div><div class="hero-inner"><div class="hero-copy"><p class="course-badge glass" style="--i:0"><span class="cb-brand">NC AcademIA · Curso</span><strong>${esc(c.name)}</strong></p><h1 style="--i:1">${emph(c.title)}</h1><p class="hero-lede" style="--i:2">${esc(c.short)}</p><p class="hero-price" style="--i:3"><b>${price}</b><span>Checkout Hotmart</span></p><p class="checkout-note">Hotmart puede mostrar COP según tu país y medio de pago.</p><div class="hero-actions" style="--i:4">${buy(c,'hero')}<a href="#programa" class="text-link">Ver el programa</a></div></div><aside class="fact-panel glass" aria-label="Ficha rápida"><span class="fact-label">Te llevas</span><p class="fact-cue">${esc(cue[c.slug])}</p><ul class="fact-list"><li><span>Duración</span><b>${esc(c.duration)}</b></li><li><span>Modalidad</span><b>Online</b></li><li><span>Cupo</span><b>${esc(p.studentsLabel)}</b></li></ul><p class="fact-for">Para ${esc(lower(c.audience))}</p></aside></div></section>
 
 <section class="section reto"><h2 class="sec-title" data-r>${esc(editorial[c.slug][0])}</h2><div class="bento"><article class="glass tile tile-pain" data-r><h3>El reto</h3><p>${esc(c.pain)}</p></article><article class="glass tile tile-outcome" data-r style="--d:1"><h3>Lo que te llevas</h3><p class="lead">${esc(c.outcome)}</p><p class="sub">${esc(editorial[c.slug][1])}</p></article><article class="glass tile tile-cta" data-r style="--d:2"><div><p class="tile-price"><b>${price}</b></p><p>Asegura tu cupo y empieza a aplicar la IA en tu trabajo.</p></div>${buy(c,'reto')}</article></div></section>
 
@@ -297,7 +295,7 @@ ${nav(c,false)}
 
 <section class="section"><div class="related-head"><h2 data-r>Tu próximo paso puede ser <em>otro.</em></h2><a href="../index.html#programas" class="text-link">Ver todos los cursos ↗</a></div><div class="track">${related.map(r=>`<a class="rel glass" href="../${r.slug}/"><img ${cardSet(r)} sizes="(max-width: 640px) 78vw, 360px" width="900" height="900" loading="lazy" alt=""><div class="rel-body"><small>${esc(r.category)}</small><h3>${esc(r.name)}</h3><p>${esc(r.short)}</p><span class="rel-price">${fmtUSD(shop(r).priceUSD)}</span></div></a>`).join('')}</div></section>
 
-<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Asegura tu cupo en <em>${esc(c.name)}.</em></h2><p class="final-price" data-r><b>${price}</b><span>Pago en línea</span></p><p data-r>Inscríbete en línea y finaliza tu pago en pocos pasos.</p><div class="final-cta" data-r>${buy(c,'final')}</div><div class="assure" data-r><span class="chip">Pago en línea</span><span class="chip">Precio en dólares</span><span class="chip">${esc(p.studentsLabel)}</span></div>${guiaFigure('../')}</div>${leadForm(c)}</div></section>
+<section class="final" id="contacto"><div class="final-inner"><div class="final-copy"><h2 data-r>Asegura tu cupo en <em>${esc(c.name)}.</em></h2><p class="final-price" data-r><b>${price}</b><span>Checkout Hotmart</span></p><p data-r>Inscríbete en línea y revisa el total y la moneda en Hotmart antes de pagar.</p><div class="final-cta" data-r>${buy(c,'final')}</div><div class="assure" data-r><span class="chip">Pago en línea</span><span class="chip">Hotmart</span><span class="chip">${esc(p.studentsLabel)}</span></div>${guiaFigure('../')}</div>${leadForm(c)}</div></section>
 </main>
 ${footer(false)}
 ${floatWa(c)}
@@ -401,7 +399,7 @@ fs.writeFileSync(path.join(out,'sitemap.xml'),`<?xml version="1.0" encoding="UTF
 // (Googlebot, Bingbot, OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, Claude-User), que son los que traen visitas y citas.
 const trainingBots = ['GPTBot','ClaudeBot','anthropic-ai','CCBot','Google-Extended','Applebot-Extended','Bytespider','Meta-ExternalAgent','cohere-ai','Diffbot','ImagesiftBot'];
 fs.writeFileSync(path.join(out,'robots.txt'),`User-agent: *\nAllow: /\n\n# Rastreadores de entrenamiento de IA: no permitidos\n${trainingBots.map(b=>`User-agent: ${b}\nDisallow: /\n`).join('\n')}\nSitemap: ${SITE}/sitemap.xml\n`);
-fs.writeFileSync(path.join(out,'llms.txt'),`# NC AcademIA\n\n> NC AcademIA es la unidad académica de Negocios Creativos (Cali, Colombia). Ofrece formación práctica en inteligencia artificial aplicada para profesionales y empresas, en español. Idea central: la IA se aprende aplicándola.\n\n## Cursos\n\n${courses.map(c=>`- [${c.name}](${SITE}/${c.slug}${SLASH}): ${c.short} Duración: ${c.duration}.`).join('\n')}\n\n## Contacto\n\n- WhatsApp: +57 311 209 3653\n- Correo: direccion@negocioscreativos.net\n- Sitio de la academia: https://www.negocioscreativos.net/ncacademia\n\n## Notas\n\n- Fechas, modalidad, inversión y certificado se confirman por cohorte; no están publicados como datos fijos.\n- Catálogo y rutas por rol: ${ROOT_URL}\n`);
+fs.writeFileSync(path.join(out,'llms.txt'),`# NC AcademIA\n\n> NC AcademIA es la unidad académica de Negocios Creativos (Cali, Colombia). Ofrece formación práctica en inteligencia artificial aplicada para profesionales y empresas, en español. Idea central: la IA se aprende aplicándola.\n\n## Cursos\n\n${courses.map(c=>`- [${c.name}](${SITE}/${c.slug}${SLASH}): ${c.short} Duración: ${c.duration}. Precio de la opción USD en Hotmart: ${fmtUSD(shop(c).priceUSD)}. [Pago](${directLink(c)}).`).join('\n')}\n\n## Contacto\n\n- WhatsApp: +57 311 209 3653\n- Correo: direccion@negocioscreativos.net\n- Sitio de la academia: https://www.negocioscreativos.net/ncacademia\n\n## Notas\n\n- Precios USD verificados en los checkouts de Hotmart el 23 de octubre de 2026; Hotmart puede mostrar COP según país y medio de pago. El total final se comprueba en el checkout.\n- Fechas, modalidad y condiciones del certificado se confirman por cohorte.\n- Catálogo y rutas por rol: ${ROOT_URL}\n`);
 
 // ---- Seguridad y caché: vercel.json (se regenera en cada compilación; contiene los hashes de los scripts en línea) ----
 const csp = ["default-src 'self'",`script-src 'self' ${[...inlineScriptHashes].join(' ')}`,"style-src 'self' 'unsafe-inline'","img-src 'self' data:","font-src 'self'","media-src 'self'","connect-src 'self'","object-src 'none'","base-uri 'none'","form-action 'self'","frame-ancestors 'none'","upgrade-insecure-requests"].join('; ');
