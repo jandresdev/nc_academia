@@ -184,6 +184,28 @@ for (const c of courses) {
 const shop = c => ({...commerceFile.products[c.slug], priceUSD:payLinks[c.slug].priceUSD});
 for (const c of courses) { const p = shop(c); if (p && p.hoursLabel) c.duration = p.hoursLabel; } // la página de venta manda en horas
 const fmtUSD = n => `USD ${n.toLocaleString('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+const reviewData = JSON.parse(fs.readFileSync(path.join(root,'assets','reviews.json'),'utf8'));
+const approvedReview = r => r && r.approved === true && r.permissionGranted === true &&
+  typeof r.id === 'string' && r.id.trim() && typeof r.author === 'string' && r.author.trim() &&
+  typeof r.quote === 'string' && r.quote.trim() && (r.rating == null || (Number.isInteger(r.rating) && r.rating >= 1 && r.rating <= 5)) &&
+  (/^https:\/\/\S+$/.test(r.sourceUrl || '') ||
+    (typeof r.evidenceId === 'string' && r.evidenceId.trim() && typeof r.sourceLabel === 'string' && r.sourceLabel.trim()));
+const uniqueReviews = entries => {
+  const seen = new Set();
+  return entries.filter(approvedReview).filter(r => { if(seen.has(r.id)) return false; seen.add(r.id); return true; }).slice(0,8);
+};
+const academyReviews = () => uniqueReviews(reviewData.academy || []);
+const courseReviews = c => {
+  const specific = (reviewData.courses?.[c.slug] || []).filter(r => r.courseSlug === c.slug);
+  return uniqueReviews([...specific,...academyReviews(),...(reviewData.home || [])]);
+};
+const homeReviews = () => uniqueReviews([...academyReviews(),...(reviewData.home || []),...courses.flatMap(c => courseReviews(c))]);
+const reviewCard = (r,i) => `<figure class="glass review-card" data-r style="--d:${i%4}">
+  ${r.rating!=null?`<div class="review-stars" role="img" aria-label="${r.rating} de 5 estrellas"><span aria-hidden="true">${'★'.repeat(r.rating)}</span><span aria-hidden="true">${'☆'.repeat(5-r.rating)}</span></div>`:`<p class="review-kicker">${r.paraphrased?'SÍNTESIS DEL COMENTARIO':'EXTRACTO DE TESTIMONIO'}</p>`}
+  ${r.paraphrased?`<p class="review-summary">${esc(r.quote)}</p>`:`<blockquote>“${esc(r.quote)}”</blockquote>`}
+  <figcaption><strong>${esc(r.author)}</strong>${r.context?`<span>${esc(r.context)}</span>`:''}<span>${esc(r.programType || (r.courseSlug?`Sobre ${courses.find(c=>c.slug===r.courseSlug)?.name||'el curso'}`:'Experiencia con NC AcademIA'))}</span>${r.sourceUrl?`<a href="${esc(r.sourceUrl)}" target="_blank" rel="noopener noreferrer">Ver comentario original ↗</a>`:`<span>Fuente: ${esc(r.sourceLabel)}</span>`}</figcaption>
+</figure>`;
+const reviewSection = (items, title, scope) => !items.length ? '' : `<section class="section reviews" id="opiniones"><div class="reviews-head" data-r><p class="eyebrow">Voces publicadas</p><h2>${esc(title)}</h2><p>${scope==='course'?'Comentarios sobre NC AcademIA, capacitación empresarial y NC Marketing, otra línea de Negocios Creativos. Se repiten entre páginas y no describen necesariamente este curso.':'Comentarios publicados por NC AcademIA y Negocios Creativos. Cada tarjeta identifica el servicio y enlaza su fuente.'}</p></div><div class="reviews-grid">${items.map(reviewCard).join('')}</div></section>`;
 // Destino de "Programas" y "Ver todos los cursos": por ahora el catálogo de este mismo despliegue; cuando la tienda enlace las landings, cambiarlo al catálogo de la tienda.
 const CATALOG_URL = process.env.CATALOG_URL || 'https://ncacademia.vercel.app/';
 const directLink = c => payLinks[c.slug].url;
@@ -289,6 +311,8 @@ ${nav(c,false)}
 
 <section class="section audience"><h2 data-r>Hecho para personas que quieren <em>aplicar.</em></h2><p data-r>${esc(c.audience)}</p><div class="rail"><article class="glass" data-r><span class="dot">1</span><strong>Tu rol</strong><p>Partimos de tareas y decisiones que ya hacen parte de tu trabajo.</p></article><article class="glass" data-r style="--d:1"><span class="dot">2</span><strong>Tu caso</strong><p>La práctica se conecta con un ejercicio o proyecto del programa.</p></article><article class="glass" data-r style="--d:2"><span class="dot">3</span><strong>Tu siguiente paso</strong><p>Te inscribes en línea y, si lo necesitas, un asesor resuelve tus dudas.</p></article></div></section>
 
+${reviewSection(courseReviews(c),'Voces de NC AcademIA y Negocios Creativos.','course')}
+
 <section class="section details"><div class="details-head"><h2 data-r>Todo lo que necesitas saber <em>para inscribirte.</em></h2>${buy(c,'details')}</div><div class="facts">${facts.map((f,i)=>`<div class="glass fact ${f[2]||''}" data-r style="--d:${i%3}"><span>${esc(f[0])}</span><strong>${esc(f[1])}</strong></div>`).join('')}</div></section>
 
 <section class="section"><div class="faq-wrap"><div data-r><h2>Resuelve tus dudas <em>antes de inscribirte.</em></h2><p class="muted">Si algo no queda claro, un asesor te responde por WhatsApp.</p>${advisor(c,'faq')}</div><div class="faq-list">${faqs.map((f,i)=>`<details class="faq-item glass" data-r style="--d:${i%4}" ${i===0?'open':''}><summary>${esc(f[0])}<span aria-hidden="true">+</span></summary><p>${esc(f[1])}</p></details>`).join('')}<details class="faq-item glass" data-r><summary>${esc(certFaq[0])}<span aria-hidden="true">+</span></summary><p>${esc(certFaq[1])}</p></details></div></div></section>
@@ -322,6 +346,8 @@ ${nav(null,true)}
 <section class="section"><div class="duo"><div class="glass" data-r><h2>Una habilidad. <em>Un mejor flujo.</em></h2><p>Si aprendes por tu cuenta: cursos para llevar IA a marketing, diseño, ventas, finanzas, administración o liderazgo.</p></div><div class="glass" data-r style="--d:1"><h2>Un reto compartido. <em>Una ruta común.</em></h2><p>Si aprenden como equipo: conversemos sobre los procesos y los cursos empresariales disponibles.</p></div></div></section>
 
 <section class="section"><div class="glass guia-panel" data-r><div class="guia-copy"><h2>No necesitas dominar toda la IA. <em>Necesitas saber cuál usar y para qué.</em></h2><p>La práctica importa. También la privacidad, la verificación y la supervisión humana. GUIA, el embajador de NC AcademIA, acompaña ese camino.</p></div><img src="assets/brand/guia/guia-ejecutivo-4x3.webp" width="1254" height="945" loading="lazy" alt="GUIA, el personaje de NC AcademIA, trabajando en su computador"></div></section>
+
+${reviewSection(homeReviews(),'Voces de NC AcademIA y Negocios Creativos.','home')}
 
 <section class="section"><div class="faq-wrap"><div data-r><h2>Empieza por <em>lo que necesitas.</em></h2><p class="muted">Si tienes dudas sobre qué ruta corresponde a tu rol o equipo, podemos orientarte.</p>${cta(null,'index-faq')}</div><div class="faq-list">${indexFaqs.map((f,i)=>`<details class="faq-item glass" data-r ${i===0?'open':''}><summary>${esc(f[0])}<span aria-hidden="true">+</span></summary><p>${esc(f[1])}</p></details>`).join('')}</div></div></section>
 

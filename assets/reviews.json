@@ -1,0 +1,95 @@
+{
+  "academy": [
+    {
+      "id": "nc-academia-vivian-2026",
+      "author": "Vivian",
+      "context": "Empresa de seguridad y vigilancia, Colombia",
+      "quote": "Excelente la clase de hoy, al igual que las anteriores.",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-maria-gonzalez-2026",
+      "author": "María González",
+      "context": "Directora de Marketing Digital",
+      "quote": "NC AcademIA cambió completamente mi perspectiva profesional.",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-online",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-carlos-rodriguez-2026",
+      "author": "Carlos Rodríguez",
+      "context": "Gerente Comercial",
+      "quote": "Ahora implemento IA en todos mis procesos comerciales.",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-online",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-ana-martinez-2026",
+      "author": "Ana Martínez",
+      "context": "CEO, TechInnovate",
+      "quote": "Excelente inversión en mi desarrollo profesional.",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-online",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-maria-elena-vasquez-2026",
+      "author": "María Elena Vásquez",
+      "context": "Directora de Innovación, RetailCorp",
+      "quote": "El curso personalizado que diseñaron para nosotros superó todas nuestras expectativas.",
+      "programType": "Capacitación empresarial personalizada",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-empresariales",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-carlos-mendoza-2026",
+      "author": "Carlos Mendoza",
+      "context": "CEO, TechSolutions",
+      "quote": "El curso fue totalmente adaptado a nuestras necesidades específicas.",
+      "programType": "Capacitación empresarial personalizada",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-empresariales",
+      "approved": true,
+      "permissionGranted": true
+    },
+    {
+      "id": "nc-academia-ana-patricia-ruiz-2026",
+      "author": "Ana Patricia Ruiz",
+      "context": "VP de Operaciones, FinanceGroup",
+      "quote": "Valoraron el enfoque consultivo y la creación conjunta de una solución para sus desafíos.",
+      "paraphrased": true,
+      "programType": "Capacitación empresarial personalizada",
+      "sourceUrl": "https://www.negocioscreativos.net/ncacademia/cursos-empresariales",
+      "approved": true,
+      "permissionGranted": true
+    }
+  ],
+  "home": [
+    {
+      "id": "nc-marketing-maria-fernanda-2026",
+      "author": "María Fernanda",
+      "context": "Socia fundadora, Constelarte",
+      "quote": "Transformaron completamente nuestra presencia digital.",
+      "programType": "Experiencia con NC Marketing, otra línea de Negocios Creativos",
+      "sourceUrl": "https://www.negocioscreativos.net/",
+      "approved": true,
+      "permissionGranted": true
+    }
+  ],
+  "courses": {
+    "ia-facil-para-todos": [],
+    "marketing-total-con-ia": [],
+    "diseno-creativo-con-ia": [],
+    "publicidad-digital-ads": [],
+    "ia-para-administrativos": [],
+    "automatizacion-y-agentes-ia": [],
+    "ia-para-comerciales": [],
+    "ia-para-finanzas": [],
+    "ia-para-gerentes": [],
+    "ia-360-para-empresas": []
+  }
+}

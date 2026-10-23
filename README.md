@@ -22,6 +22,10 @@ Cada curso tiene su propia personalidad visual en el bloque `[data-theme="<slug>
 
 Las landings se compilan por defecto en **modo tienda**: `dist/ncacademia/cursos/<curso>/index.html` y `dist/ncacademia/cursos/assets/...`, con rutas absolutas, canonical `https://www.negocioscreativos.net/ncacademia/cursos/<curso>` (sin barra final) y `vercel.json` con `trailingSlash: false`. La tienda (Next.js) puede reenviar esas rutas con un rewrite. **La guía de publicación está en [PUBLICAR-EN-TIENDA.md](PUBLICAR-EN-TIENDA.md).** El botón de compra abre el checkout de Hotmart del curso desde cualquier dominio. La raíz del despliegue (por ejemplo `ncacademia.vercel.app/`) muestra el catálogo como **vista previa**, con `noindex` y un `robots.txt` que bloquea indexar ese dominio; las URL públicas son las de la tienda. Para generar la versión autónoma (catálogo en la raíz y rutas relativas): `PUBLISH_BASE="" npm run build` (en Git Bash de Windows, anteponer `MSYS_NO_PATHCONV=1` si se pasa una ruta). Si el sitio se publica en otro dominio, definir también `SITE_URL`.
 
+## Reseñas y prueba social
+
+El componente muestra ocho comentarios en cada landing y en el catálogo. Se alimenta de `assets/reviews.json` y solo publica entradas con texto, autor, fuente identificada y autorización de publicación. Siete hablan de la academia o capacitación empresarial; uno de NC Marketing. Se repiten en las diez landings por indicación del usuario, siempre con el servicio identificado y sin presentarlos como experiencia del curso específico. Cada tarjeta enlaza el sitio oficial donde se publicó. Ver [RESEÑAS-PARA-PUBLICAR.md](RESEÑAS-PARA-PUBLICAR.md) para ampliar la selección con opiniones atribuibles a cada curso. La página no declara una valoración promedio ni publica marcado de reseñas sin datos reales.
+
 ## Embudo de ventas y precios
 
 Cada landing es una página de venta: precio en dólares (USD) en el hero, ficha con horas, modalidad y cupo, botón **Inscribirme ahora** en cada punto de decisión y **Hablar con un asesor** (WhatsApp) como apoyo. El formulario queda como canal secundario.
