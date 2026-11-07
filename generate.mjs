@@ -206,6 +206,18 @@ const reviewCard = (r,i) => `<figure class="glass review-card" data-r style="--d
   <figcaption><strong>${esc(r.author)}</strong>${r.context?`<span>${esc(r.context)}</span>`:''}<span>${esc(r.programType || (r.courseSlug?`Sobre ${courses.find(c=>c.slug===r.courseSlug)?.name||'el curso'}`:'Experiencia con NC AcademIA'))}</span>${r.sourceUrl?`<a href="${esc(r.sourceUrl)}" target="_blank" rel="noopener noreferrer">Ver comentario original ↗</a>`:`<span>Fuente: ${esc(r.sourceLabel)}</span>`}</figcaption>
 </figure>`;
 const reviewSection = (items, title, scope) => !items.length ? '' : `<section class="section reviews" id="opiniones"><div class="reviews-head" data-r><p class="eyebrow">Voces publicadas</p><h2>${esc(title)}</h2><p>${scope==='course'?'Comentarios sobre NC AcademIA, capacitación empresarial y NC Marketing, otra línea de Negocios Creativos. Se repiten entre páginas y no describen necesariamente este curso.':'Comentarios publicados por NC AcademIA y Negocios Creativos. Cada tarjeta identifica el servicio y enlaza su fuente.'}</p></div><div class="reviews-grid">${items.map(reviewCard).join('')}</div></section>`;
+// ---- Docentes por curso (assets/teachers.json: datos del PDF de profesores; fotos en assets/media/team/) ----
+const teachersFile = JSON.parse(fs.readFileSync(path.join(root,'assets','teachers.json'),'utf8'));
+const courseTeachers = c => (teachersFile.courses[c.slug]||[]).map(id => ({id, ...teachersFile.teachers[id]}));
+const initials = name => name.replace(/\./g,'').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const teacherCard = (t, i) => {
+  const [lead, ...more] = t.creds;
+  const visual = t.photo
+    ? `<img src="../assets/media/team/${t.photo}.webp" width="480" height="480" loading="lazy" alt="${esc(`${t.name}, docente de NC AcademIA`)}">`
+    : `<div class="tc-mono" aria-hidden="true"><span>${esc(initials(t.name))}</span></div>`;
+  return `<article class="teacher glass" data-r style="--d:${i%4}"><div class="tc-photo">${visual}</div><div class="tc-body"><p class="tc-role">Docente NC AcademIA</p><h3>${esc(t.name)}</h3><p class="tc-lead">${esc(lead)}</p>${more.length?`<ul>${more.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>`:''}</div></article>`;
+};
+const teamSection = c => { const list = courseTeachers(c); return !list.length ? '' : `<section class="section team" id="docentes"><div class="team-head" data-r><p class="eyebrow">Tu equipo docente</p><h2>Aprende con quienes <em>lo practican.</em></h2><p>${list.length===1?'Un docente':`${list.length} docentes`} de NC AcademIA acompañan ${esc(c.name)} con formación académica y experiencia aplicada.</p></div><div class="team-grid">${list.map(teacherCard).join('')}</div></section>`; };
 // Destino de "Programas" y "Ver todos los cursos": por ahora el catálogo de este mismo despliegue; cuando la tienda enlace las landings, cambiarlo al catálogo de la tienda.
 const CATALOG_URL = process.env.CATALOG_URL || 'https://ncacademia.vercel.app/';
 const directLink = c => payLinks[c.slug].url;
@@ -283,7 +295,7 @@ function page(c, index){
   const priceFaq = [`¿Cuánto cuesta ${c.name}?`,`El enlace de Hotmart muestra ${price} para la opción de pago en USD. Según el país y el medio de pago, el checkout puede mostrar el total en COP. Revisa el importe final antes de pagar.`];
   const faqs = [priceFaq, howFaq, ...c.faqs.filter(f => !/inversi[oó]n|cu[aá]nto cuesta/i.test(f[0]))];
   const schema = {"@context":"https://schema.org","@graph":[orgNode,
-    {"@type":"Course","@id":`${canonical}#course`,name:c.name,description:c.short,url:canonical,inLanguage:"es",provider:{"@id":ORG_ID},image:`${SITE}/assets/og/${c.slug}.jpg`,teaches:c.outcome,audience:{"@type":"Audience",audienceType:c.audience},
+    {"@type":"Course","@id":`${canonical}#course`,name:c.name,description:c.short,url:canonical,inLanguage:"es",provider:{"@id":ORG_ID},image:`${SITE}/assets/og/${c.slug}.jpg`,teaches:c.outcome,audience:{"@type":"Audience",audienceType:c.audience},instructor:courseTeachers(c).map(t=>({"@type":"Person",name:t.name,worksFor:{"@id":ORG_ID}})),
       offers:{"@type":"Offer",price:p.priceUSD,priceCurrency:"USD",category:"Paid",url:directLink(c)},
       hasCourseInstance:{"@type":"CourseInstance",courseMode:"online",courseWorkload:isoHours(c.duration)}},
     {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Cursos de IA",item:ROOT_URL},{"@type":"ListItem",position:2,name:c.name,item:canonical}]},
@@ -310,6 +322,8 @@ ${nav(c,false)}
 <section class="banner">${c.slug==='automatizacion-y-agentes-ia'?`<video class="banner-media" autoplay muted loop playsinline preload="none" poster="${media(c)}" aria-hidden="true"><source src="../assets/media/${c.slug}.mp4" type="video/mp4"></video>`:`<img class="banner-media" src="${media(c)}" ${imgSet(c)} sizes="100vw" width="1344" height="768" loading="lazy" alt="">`}<div class="banner-panel glass" data-r><h2>Un caso para trabajar. <em>Un aprendizaje que se conecta.</em></h2><p>${esc(c.artifact)}</p>${buy(c,'artifact')}</div></section>
 
 <section class="section audience"><h2 data-r>Hecho para personas que quieren <em>aplicar.</em></h2><p data-r>${esc(c.audience)}</p><div class="rail"><article class="glass" data-r><span class="dot">1</span><strong>Tu rol</strong><p>Partimos de tareas y decisiones que ya hacen parte de tu trabajo.</p></article><article class="glass" data-r style="--d:1"><span class="dot">2</span><strong>Tu caso</strong><p>La práctica se conecta con un ejercicio o proyecto del programa.</p></article><article class="glass" data-r style="--d:2"><span class="dot">3</span><strong>Tu siguiente paso</strong><p>Te inscribes en línea y, si lo necesitas, un asesor resuelve tus dudas.</p></article></div></section>
+
+${teamSection(c)}
 
 ${reviewSection(courseReviews(c),'Voces de NC AcademIA y Negocios Creativos.','course')}
 

@@ -1,0 +1,30 @@
+{
+  "source": "Profesores_por_curso_NC_AcademIA.pdf (Octubre 2026); fotos de la sección Nuestro equipo docente de negocioscreativos.net/ncacademia",
+  "teachers": {
+    "claudia-ramos": { "name": "Claudia Ramos", "photo": "claudia-ramos", "creds": ["Magíster en Marketing Digital y Comercio Electrónico (UNIR)", "Administradora de Empresas (U. Libre)", "MBA 1, 2 y 3 (Fundación Carvajal – ACTEC)", "Candidata a Doctorado en Ciencias Económicas y Empresariales (U. de Granada)"] },
+    "juan-manuel-munoz": { "name": "Juan Manuel Muñoz", "photo": "juan-manuel-munoz", "creds": ["Profesional en Mercadeo y Negocios Internacionales (UAO)", "Diplomado en Formación de Consultores Empresariales (U. de Santander)", "Scrum Master certificado", "Gestión de la Innovación y el Emprendimiento (George Washington University)"] },
+    "juan-david-millan": { "name": "Juan David Cabrera Millán", "photo": "juan-david-millan", "creds": ["Comunicador Social (UNIAJC, tesis laureada)", "Community Manager y Marketing Digital (Platzi)"] },
+    "jose-miguel-ortega": { "name": "José Miguel Ortega", "photo": "jose-miguel-ortega", "creds": ["Comunicador Social y Periodista", "Comunicador Nacional Certificado (2025)"] },
+    "johanna-hernandez": { "name": "Johanna Hernández Millán", "photo": "johanna-hernandez", "creds": ["Egresada de Economía (U. de Nariño)", "Formación SENA en técnicas de venta, atención al cliente y SG-SST"] },
+    "javier-montes": { "name": "Javier Montes", "photo": "javier-montes", "creds": ["Máster en Marketing Digital (UNIR)", "Comunicador Social y Periodista (UAO)"] },
+    "christian-paeres": { "name": "Christian Paeres", "photo": "christian-paeres", "creds": ["Máster en Gestión de la Innovación Empresarial (U. de Barcelona – EAE)", "Ingeniero Industrial (EIA)", "Especialización en Data Science e IA (DS4A, con honores)", "Programa ejecutivo en incubadoras y aceleradoras (U. de Salamanca)"] },
+    "juan-andres-agudelo": { "name": "Juan Andrés Agudelo", "photo": "juan-andres-agudelo", "creds": ["Ingeniero de Sistemas (Javeriana Cali)", "PMP", "Scrum Master", "Diplomado Auditor Interno ISO 27001 (Javeriana)", "Certificación en Desarrollo de Aplicaciones Web (UPB)"] },
+    "gustavo-bernal": { "name": "Gustavo Bernal", "photo": null, "creds": ["Máster en Big Data e Inteligencia de Negocios (ENEB)", "Contador Público (USB Cali)", "Posgrado en Dirección Financiera y Contabilidad (ENEB)", "Certificación internacional en riesgos AIRM"] },
+    "julieth-rivera": { "name": "Julieth Rivera", "photo": "julieth-rivera", "creds": ["Profesional en Seguridad y Salud en el Trabajo (U. del Quindío)", "Maestría en curso (U. Internacional de Valencia)", "Auditora Interna ISO 42001 – Sistemas de Gestión de IA", "Diplomado en Transformación Digital"] },
+    "felipe-restrepo": { "name": "Felipe Restrepo", "photo": "felipe-restrepo", "creds": ["Magíster en Gestión de Ciencia, Tecnología e Innovación (U. de Antioquia)", "Administrador de Empresas (U. de Antioquia)", "Diplomado en Gestión de Proyectos PMI (EAFIT)"] },
+    "jhon-quimbayo": { "name": "Jhon Quimbayo", "photo": null, "creds": ["Especialista en Gerencia de Negocios (UNIAJC)", "Administrador de Empresas (UNIAJC)", "Diplomado en Gerencia de Marketing (UNIAJC)"] },
+    "joseph-g": { "name": "Joseph G.", "photo": null, "creds": ["Desarrollo de Negocios y Estrategia Empresarial", "Alianzas Estratégicas", "Ecosistemas Empresariales", "Mentor y Consultor"] }
+  },
+  "courses": {
+    "ia-facil-para-todos": ["claudia-ramos", "juan-manuel-munoz", "juan-david-millan", "jose-miguel-ortega", "johanna-hernandez"],
+    "marketing-total-con-ia": ["claudia-ramos", "juan-david-millan", "javier-montes", "juan-manuel-munoz", "christian-paeres"],
+    "diseno-creativo-con-ia": ["javier-montes", "jose-miguel-ortega", "juan-david-millan"],
+    "publicidad-digital-ads": ["juan-david-millan", "claudia-ramos", "juan-manuel-munoz", "javier-montes", "juan-andres-agudelo", "johanna-hernandez"],
+    "ia-para-administrativos": ["juan-andres-agudelo", "gustavo-bernal", "julieth-rivera", "johanna-hernandez"],
+    "automatizacion-y-agentes-ia": ["juan-andres-agudelo", "christian-paeres", "felipe-restrepo"],
+    "ia-para-comerciales": ["jhon-quimbayo", "juan-manuel-munoz", "christian-paeres", "juan-andres-agudelo"],
+    "ia-para-finanzas": ["gustavo-bernal", "felipe-restrepo", "juan-manuel-munoz", "jhon-quimbayo"],
+    "ia-para-gerentes": ["felipe-restrepo", "joseph-g", "christian-paeres", "claudia-ramos", "juan-andres-agudelo", "jhon-quimbayo"],
+    "ia-360-para-empresas": ["joseph-g", "felipe-restrepo", "christian-paeres", "juan-andres-agudelo", "julieth-rivera", "claudia-ramos", "gustavo-bernal", "jhon-quimbayo"]
+  }
+}

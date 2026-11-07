@@ -52,3 +52,7 @@ El sitemap se debe enviar en Search Console o referenciar desde el `robots.txt` 
 ## Antes de publicar
 
 Confirmar unidad de cobro y alcance para equipos, fechas, modalidad/sesiones, condiciones del certificado, cupos, herramientas/licencias, docentes y ruta de despliegue. Los precios USD y enlaces de pago están actualizados según los checkouts recibidos el 21 de octubre y verificados el 23 de octubre de 2026. Los metadatos `og:image` apuntan a las imágenes del curso en la URL canónica prevista; revisar esas rutas al desplegar.
+
+## Equipo docente por curso
+
+Cada landing tiene la sección **Tu equipo docente** (`#docentes`), generada desde `assets/teachers.json`: `teachers` (nombre, foto y títulos tal como figuran en el PDF `Profesores por curso`) y `courses` (qué docentes dicta cada curso, en el orden del PDF). Las fotos están en `assets/media/team/` (WebP 480 px, tomadas de la sección "Nuestro equipo docente" de negocioscreativos.net/ncacademia). Quien no tiene foto muestra un monograma de marca; para agregarla, guardar `assets/media/team/<id>.webp` y poner `"photo": "<id>"` en su ficha. Los docentes también salen como `instructor` en los datos estructurados del curso.
