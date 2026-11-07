@@ -13,7 +13,7 @@
     "julieth-rivera": { "name": "Julieth Rivera", "photo": "julieth-rivera", "creds": ["Profesional en Seguridad y Salud en el Trabajo (U. del Quindío)", "Maestría en curso (U. Internacional de Valencia)", "Auditora Interna ISO 42001 – Sistemas de Gestión de IA", "Diplomado en Transformación Digital"] },
     "felipe-restrepo": { "name": "Felipe Restrepo", "photo": "felipe-restrepo", "creds": ["Magíster en Gestión de Ciencia, Tecnología e Innovación (U. de Antioquia)", "Administrador de Empresas (U. de Antioquia)", "Diplomado en Gestión de Proyectos PMI (EAFIT)"] },
     "jhon-quimbayo": { "name": "Jhon Quimbayo", "photo": null, "creds": ["Especialista en Gerencia de Negocios (UNIAJC)", "Administrador de Empresas (UNIAJC)", "Diplomado en Gerencia de Marketing (UNIAJC)"] },
-    "joseph-g": { "name": "Joseph G.", "photo": null, "creds": ["Desarrollo de Negocios y Estrategia Empresarial", "Alianzas Estratégicas", "Ecosistemas Empresariales", "Mentor y Consultor"] }
+    "joseph-g": { "name": "Joseph Granda", "photo": null, "creds": ["Desarrollo de Negocios y Estrategia Empresarial", "Alianzas Estratégicas", "Ecosistemas Empresariales", "Mentor y Consultor"] }
   },
   "courses": {
     "ia-facil-para-todos": ["claudia-ramos", "juan-manuel-munoz", "juan-david-millan", "jose-miguel-ortega", "johanna-hernandez"],
