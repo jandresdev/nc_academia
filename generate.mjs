@@ -210,14 +210,17 @@ const reviewSection = (items, title, scope) => !items.length ? '' : `<section cl
 const teachersFile = JSON.parse(fs.readFileSync(path.join(root,'assets','teachers.json'),'utf8'));
 const courseTeachers = c => (teachersFile.courses[c.slug]||[]).map(id => ({id, ...teachersFile.teachers[id]}));
 const initials = name => name.replace(/\./g,'').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
-const teacherCard = (t, i) => {
+const teacherCard = (t, dup = false) => {
   const [lead, ...more] = t.creds;
   const visual = t.photo
-    ? `<img src="../assets/media/team/${t.photo}.webp" width="480" height="480" loading="lazy" alt="${esc(`${t.name}, docente de NC AcademIA`)}">`
+    ? `<img src="../assets/media/team/${t.photo}.webp" width="480" height="480" loading="lazy" alt="${dup ? '' : esc(`${t.name}, docente de NC AcademIA`)}">`
     : `<div class="tc-mono" aria-hidden="true"><span>${esc(initials(t.name))}</span></div>`;
-  return `<article class="teacher glass" data-r style="--d:${i%4}"><div class="tc-photo">${visual}</div><div class="tc-body"><p class="tc-role">Docente NC AcademIA</p><h3>${esc(t.name)}</h3><p class="tc-lead">${esc(lead)}</p>${more.length?`<ul>${more.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>`:''}</div></article>`;
+  return `<article class="teacher glass"${dup ? ' aria-hidden="true"' : ''}><div class="tc-photo">${visual}</div><div class="tc-body"><p class="tc-role">Docente NC AcademIA</p><h3>${esc(t.name)}</h3><p class="tc-lead">${esc(lead)}</p>${more.length?`<ul>${more.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>`:''}</div></article>`;
 };
-const teamSection = c => { const list = courseTeachers(c); return !list.length ? '' : `<section class="section team" id="docentes"><div class="team-head" data-r><p class="eyebrow">Tu equipo docente</p><h2>Aprende con quienes <em>lo practican.</em></h2><p>${list.length===1?'Un docente':`${list.length} docentes`} de NC AcademIA acompañan ${esc(c.name)} con formación académica y experiencia aplicada.</p></div><div class="team-grid">${list.map(teacherCard).join('')}</div></section>`; };
+// Una sola fila en bucle infinito: la mitad se repite hasta cubrir una pantalla ancha y se duplica (aria-hidden) para que el desplazamiento no tenga saltos.
+const teamTrack = list => { const half = Array.from({length: Math.ceil(6 / list.length)}, () => list).flat();
+  return `<div class="team-marquee" role="group" aria-label="Docentes del curso"><div class="team-track" style="--dur:${half.length * 8}s">${half.map(t=>teacherCard(t)).join('')}${half.map(t=>teacherCard(t,true)).join('')}</div></div>`; };
+const teamSection = c => { const list = courseTeachers(c); return !list.length ? '' : `<section class="section team" id="docentes"><div class="team-head" data-r><p class="eyebrow">Tu equipo docente</p><h2>Aprende con quienes <em>lo practican.</em></h2><p>${list.length===1?'Un docente':`${list.length} docentes`} de NC AcademIA acompañan ${esc(c.name)} con formación académica y experiencia aplicada.</p></div>${teamTrack(list)}</section>`; };
 // Destino de "Programas" y "Ver todos los cursos": por ahora el catálogo de este mismo despliegue; cuando la tienda enlace las landings, cambiarlo al catálogo de la tienda.
 const CATALOG_URL = process.env.CATALOG_URL || 'https://ncacademia.vercel.app/';
 const directLink = c => payLinks[c.slug].url;

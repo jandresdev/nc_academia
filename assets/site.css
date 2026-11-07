@@ -489,13 +489,16 @@ h1 em, h2 em { font-style: italic; color: var(--red); padding-right: .04em; }
   .js [data-r] { opacity: 1; transform: none; }
 }
 
-/* Equipo docente por curso */
+/* Equipo docente por curso: una sola fila en bucle infinito, se pausa al pasar el mouse */
 .team-head { max-width: 760px; margin-bottom: 34px; }
 .team-head .eyebrow { margin-bottom: 14px; }
 .team-head h2 { margin-bottom: 14px; }
 .team-head > p:last-child { margin: 0; color: var(--ink-2); line-height: 1.6; }
-.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
-.teacher { padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.team-marquee { overflow: hidden; padding: 8px 0 14px; margin-inline: calc(var(--gutter, 0px) * -1); -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.team-track { display: flex; gap: 18px; width: max-content; animation: team-scroll var(--dur, 50s) linear infinite; will-change: transform; }
+.team-marquee:hover .team-track, .team-marquee:focus-within .team-track, .team-marquee:active .team-track { animation-play-state: paused; }
+@keyframes team-scroll { to { transform: translateX(calc(-50% - 9px)); } }
+.teacher { flex: none; width: 280px; padding: 0; overflow: hidden; display: flex; flex-direction: column; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
 .teacher:hover { transform: translateY(-4px); }
 .tc-photo { aspect-ratio: 1 / 1; background: #0b0b0d; overflow: hidden; position: relative; }
 .tc-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; transition: transform .7s cubic-bezier(.2, .7, .2, 1); }
@@ -510,12 +513,11 @@ h1 em, h2 em { font-style: italic; color: var(--red); padding-right: .04em; }
 .tc-body ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .tc-body li { position: relative; padding-left: 16px; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 .tc-body li::before { content: ''; position: absolute; left: 0; top: .5em; width: 7px; height: 7px; background: var(--red); clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%); }
-@media (max-width: 600px) {
-  .team-grid { grid-template-columns: 1fr; }
-  .teacher { flex-direction: row; }
-  .tc-photo { width: 112px; aspect-ratio: auto; flex: none; align-self: stretch; min-height: 150px; }
-  .tc-photo::after { display: none; }
-  .tc-body { padding: 16px 16px 18px; }
-  .tc-body h3 { font-size: 19px; }
+@media (max-width: 600px) { .teacher { width: 252px; } .tc-body { padding: 16px 16px 20px; } .tc-body h3 { font-size: 20px; } }
+@media (prefers-reduced-motion: reduce) {
+  .team-marquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; scroll-snap-type: x proximity; }
+  .team-track { animation: none; }
+  .teacher[aria-hidden="true"] { display: none; }
+  .teacher { scroll-snap-align: start; transition: none; }
+  .teacher:hover, .teacher:hover .tc-photo img { transform: none; }
 }
-@media (prefers-reduced-motion: reduce) { .teacher, .tc-photo img { transition: none; } .teacher:hover, .teacher:hover .tc-photo img { transform: none; } }
